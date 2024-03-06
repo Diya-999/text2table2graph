@@ -74,7 +74,7 @@ def find_max_node_size(df_row):
 def build_txt_table(df_row):
     if df_row['df_graph_ind'] == "after_cut_header":
         result_str = '|'
-        for row in df_row['df_graph'].iterrows():
+        for row in df_row['df_graph'][['c1','c2','c3']].iterrows():
             for item in row[1]:
                 result_str += f" {item} |"
             result_str += " <NEWLINE> |"
@@ -87,7 +87,7 @@ parser = argparse.ArgumentParser()
 
 parser.add_argument('--valid_ratio', type=float, default=0.1)
 parser.add_argument('--train_ratio', type=float, default=0.9)
-parser.add_argument('--input_path', type=str, default='./pkl/final_rs_on_news_v2.pkl')
+parser.add_argument('--input_path', type=str, default='./pkl/final_rs_on_news.pkl')
 parser.add_argument('--output_path', type=str, default='./dataset/')
 parser.add_argument('--filter_by_max_node_size', type=int, default=20)
 parser.add_argument('--filter_by_min_node_size', type=int, default=0)
@@ -95,7 +95,7 @@ parser.add_argument('--filter_by_min_node_size', type=int, default=0)
 args = parser.parse_args()
 
 data = pd.read_pickle(args.input_path)
-
+print("data.shape: ",data.shape)
 data['sep_count'] = data['txt2tab_raw'].apply(lambda x: x.count('|'))
 data['sep_count_mod_4'] = (data['sep_count'] % 4 == 0)
 df_4_sep = data.query("sep_count_mod_4 == True")#.assign(has_emtpy_node=False)
@@ -110,6 +110,11 @@ df_4_sep = df_4_sep.apply(cut_invalid_header, axis=1)
 df_4_sep = df_4_sep.apply(find_max_node_size, axis=1)
 
 df_4_sep = df_4_sep.apply(build_txt_table, axis=1)
+
+data[['split_sep', 'split_sep_count','has_emtpy_node','df_graph','df_graph_ind','str_newline','max_node_size' 'min_node_size']] = None
+data.update(df_4_sep)
+assert df_4_sep.shape[0] == data['df_graph'].count()
+data.to_pickle(f"{args.output_path}/total_df.pkl")
 
 total_num = df_4_sep.query("df_graph_ind=='after_cut_header'").shape[0]
 total_train_num = int(total_num*args.train_ratio)
