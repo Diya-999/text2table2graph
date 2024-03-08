@@ -91,54 +91,60 @@ def build_txt_table(df_row):
         df_row['str_newline'] = None
     return df_row  
 
-parser = argparse.ArgumentParser()
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
 
-parser.add_argument('--valid_ratio', type=float, default=0.1)
-parser.add_argument('--train_ratio', type=float, default=0.9)
-parser.add_argument('--input_path', type=str, default='./pkl/final_rs_on_news.pkl')
-parser.add_argument('--output_path', type=str, default='./dataset/')
-parser.add_argument('--filter_by_max_node_size', type=int, default=20)
-parser.add_argument('--filter_by_min_node_size', type=int, default=0)
+    parser.add_argument('--valid_ratio', type=float, default=0.1)
+    parser.add_argument('--train_ratio', type=float, default=0.9)
+    parser.add_argument('--input_path', type=str, default='./pkl/final_rs_on_news.pkl')
+    parser.add_argument('--output_path', type=str, default='./dataset/')
+    parser.add_argument('--filter_by_max_node_size', type=int, default=20)
+    parser.add_argument('--filter_by_min_node_size', type=int, default=0)
 
-args = parser.parse_args()
+    args = parser.parse_args()
 
+    data = pd.read_pickle(args.input_path)
+    print("data.shape: ",data.shape)
     data = data.assign(txt2tab_raw=data['txt2tab_raw'].apply(check_sep_status))
+    data['sep_count'] = data['txt2tab_raw'].apply(lambda x: x.count('|'))
+    data['sep_count_mod_4'] = (data['sep_count'] % 4 == 0)
+    df_4_sep = data.query("sep_count_mod_4 == True")
 
-df_4_sep = df_4_sep.assign(split_sep=df_4_sep['txt2tab_raw'].apply(lambda x: x.split('|')))
-df_4_sep = df_4_sep.assign(split_sep_count=df_4_sep['split_sep'].apply(lambda x: len(x)))
-df_4_sep = df_4_sep.assign(df_graph=df_4_sep['split_sep'].apply(gen_one_df))
-df_4_sep = df_4_sep.assign(df_graph_ind=df_4_sep['df_graph'].apply(check_header))
-df_4_sep = df_4_sep.apply(cut_normal_header, axis=1)
-df_4_sep = df_4_sep.apply(check_and_rename_empty_node, axis=1)
-df_4_sep = df_4_sep.apply(cut_invalid_header, axis=1)
-df_4_sep = df_4_sep.apply(find_max_node_size, axis=1)
+    df_4_sep = df_4_sep.assign(split_sep=df_4_sep['txt2tab_raw'].apply(lambda x: x.split('|')))
+    df_4_sep = df_4_sep.assign(split_sep_count=df_4_sep['split_sep'].apply(lambda x: len(x)))
+    df_4_sep = df_4_sep.assign(df_graph=df_4_sep['split_sep'].apply(gen_one_df))
+    df_4_sep = df_4_sep.assign(df_graph_ind=df_4_sep['df_graph'].apply(check_header))
+    df_4_sep = df_4_sep.apply(cut_normal_header, axis=1)
+    df_4_sep = df_4_sep.apply(check_and_rename_empty_node, axis=1)
+    df_4_sep = df_4_sep.apply(cut_invalid_header, axis=1)
+    df_4_sep = df_4_sep.apply(find_max_node_size, axis=1)
 
-df_4_sep = df_4_sep.apply(build_txt_table, axis=1)
+    df_4_sep = df_4_sep.apply(build_txt_table, axis=1)
 
-data[['split_sep', 'split_sep_count','has_emtpy_node','df_graph','df_graph_ind','str_newline','max_node_size' 'min_node_size']] = None
-data.update(df_4_sep)
-assert df_4_sep.shape[0] == data['df_graph'].count()
-data.to_pickle(f"{args.output_path}/total_df.pkl")
+    data[['split_sep', 'split_sep_count','has_emtpy_node','df_graph','df_graph_ind','str_newline','max_node_size' 'min_node_size']] = None
+    data.update(df_4_sep)
+    assert df_4_sep.shape[0] == data['df_graph'].count()
+    data.to_pickle(f"{args.output_path}/total_df.pkl")
 
-total_num = df_4_sep.query("df_graph_ind=='after_cut_header'").shape[0]
-total_train_num = int(total_num*args.train_ratio)
-val_num = int(total_train_num*args.valid_ratio)
-filter_index = df_4_sep.query("df_graph_ind=='after_cut_header'").query(f"max_node_size <= {args.filter_by_max_node_size}").query(f"min_node_size >= {args.filter_by_min_node_size}").index
-val_index = filter_index[:val_num]
-train_index = filter_index[val_num:total_train_num]
-test_index = filter_index[total_train_num:]
+    total_num = df_4_sep.query("df_graph_ind=='after_cut_header'").shape[0]
+    total_train_num = int(total_num*args.train_ratio)
+    val_num = int(total_train_num*args.valid_ratio)
+    filter_index = df_4_sep.query("df_graph_ind=='after_cut_header'").query(f"max_node_size <= {args.filter_by_max_node_size}").query(f"min_node_size >= {args.filter_by_min_node_size}").index
+    val_index = filter_index[:val_num]
+    train_index = filter_index[val_num:total_train_num]
+    test_index = filter_index[total_train_num:]
 
-if not os.path.exists(args.output_path):
-    os.makedirs(args.output_path)
+    if not os.path.exists(args.output_path):
+        os.makedirs(args.output_path)
 
-train = '\n'.join(df_4_sep.loc[train_index]['str_newline'])
-with open(f"{args.output_path}train.txt", "w") as file:
-    file.write(train)
+    train = '\n'.join(df_4_sep.loc[train_index]['str_newline'])
+    with open(f"{args.output_path}train.txt", "w") as file:
+        file.write(train)
 
-valid = '\n'.join(df_4_sep.loc[val_index]['str_newline'])
-with open(f"{args.output_path}valid.txt", "w") as file:
-    file.write(valid)
+    valid = '\n'.join(df_4_sep.loc[val_index]['str_newline'])
+    with open(f"{args.output_path}valid.txt", "w") as file:
+        file.write(valid)
 
-test = '\n'.join(df_4_sep.loc[test_index]['str_newline'])
-with open(f"{args.output_path}test.txt", "w") as file:
-    file.write(test)
+    test = '\n'.join(df_4_sep.loc[test_index]['str_newline'])
+    with open(f"{args.output_path}test.txt", "w") as file:
+        file.write(test)
