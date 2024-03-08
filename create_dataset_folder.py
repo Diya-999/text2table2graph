@@ -18,8 +18,8 @@ def count_node_size(df_row):
         df_row['max_node_size'] = df_row['df_graph']['from_node_size'].max() if  df_row['df_graph']['from_node_size'].max() > df_row['df_graph']['to_node_size'].max() else df_row['df_graph']['to_node_size'].max()
         df_row['min_node_size'] = df_row['df_graph']['from_node_size'].min() if df_row['df_graph']['from_node_size'].min() < df_row['df_graph']['to_node_size'].min() else df_row['df_graph']['to_node_size'].min()
     else:
-        df_row['max_node_size'] = 0
-        df_row['min_node_size'] = 0
+        df_row['max_node_size'] = None
+        df_row['min_node_size'] = None
     return df_row
 
 if __name__ == '__main__':
@@ -27,7 +27,7 @@ if __name__ == '__main__':
 
     parser.add_argument('--valid_ratio', type=float, default=0.1)
     parser.add_argument('--train_ratio', type=float, default=0.9)
-    parser.add_argument('--input_path', type=str, default='./pkl/preprocessed_df.pkl')
+    parser.add_argument('--input_path', type=str, default='./pkl/add_columns_df.pkl')
     parser.add_argument('--output_path', type=str, default='./dataset/')
     parser.add_argument('--filter_by_max_node_size', type=int, default=20)
     parser.add_argument('--filter_by_min_node_size', type=int, default=0)
