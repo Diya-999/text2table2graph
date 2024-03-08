@@ -5,6 +5,14 @@ import pandas as pd
 import numpy as np
 import re 
 
+def check_sep_status(text):
+    text_lower = text.lower()
+    pattern = r'[|][|][\s]?from node[\s]?[|][|][\s]?to node[\s]?[|][|][\s]?edge label[\s]?[|][|][\s]?[|][|]'
+    matches = re.findall(pattern, text_lower)
+    if len(matches) > 0:
+        text = text.replace("||","|")
+    return text
+
 def gen_one_df(row):
     tmp_arr = np.array(row[1:])
     tmp_arr = [x.strip() for x in tmp_arr]
@@ -94,11 +102,7 @@ parser.add_argument('--filter_by_min_node_size', type=int, default=0)
 
 args = parser.parse_args()
 
-data = pd.read_pickle(args.input_path)
-print("data.shape: ",data.shape)
-data['sep_count'] = data['txt2tab_raw'].apply(lambda x: x.count('|'))
-data['sep_count_mod_4'] = (data['sep_count'] % 4 == 0)
-df_4_sep = data.query("sep_count_mod_4 == True")#.assign(has_emtpy_node=False)
+    data = data.assign(txt2tab_raw=data['txt2tab_raw'].apply(check_sep_status))
 
 df_4_sep = df_4_sep.assign(split_sep=df_4_sep['txt2tab_raw'].apply(lambda x: x.split('|')))
 df_4_sep = df_4_sep.assign(split_sep_count=df_4_sep['split_sep'].apply(lambda x: len(x)))
