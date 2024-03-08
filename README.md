@@ -1,1 +1,2 @@
 # text2table2graph
+python create_dataset_folder.py --valid_ratio 0.1 --train_ratio 0.9 --input_path <input_pkl_path> --output_path <output_dataset_folder_path> --filter_by_max_node_size 20 --filter_by_min_node_size 0
