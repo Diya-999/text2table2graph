@@ -283,18 +283,18 @@
     <script type="text/javascript">
         edges1 = edges;
         nodes1 = nodes;
-        var nodes_option1 = nodes1.map(function (node) {
-                return { value: node.id, text: node.id };
-            })
     </script>
     <script type="text/javascript" src="json2/nodes.json"></script>
     <script type="text/javascript" src="json2/edges.json"></script>
     <script type="text/javascript">
         edges2 = edges;
         nodes2 = nodes;
-        var nodes_option2 = nodes2.map(function (node) {
-                return { value: node.id, text: node.id };
-            })
+    </script>
+    <script type="text/javascript" src="json3/nodes.json"></script>
+    <script type="text/javascript" src="json3/edges.json"></script>
+    <script type="text/javascript">
+        edges3 = edges;
+        nodes3 = nodes;
     </script>
     <script type="text/javascript">
         // initialize global variables.
@@ -302,7 +302,7 @@
         var preEdgeId
         var edges;
         var nodes;
-        var nodes_option
+        var nodesOptions;
         var allNodes;
         var allEdges;
         var nodeColors;
@@ -322,40 +322,61 @@
             property: '',
             value: []
         };
-        var nodeColors2 = {};
-        allNodes = nodes2.get({ returnType: "Object" });
-        for (nodeId in allNodes) {
-            nodeColors2[nodeId] = allNodes[nodeId].color;
-        }
-        allEdges = edges2.get({ returnType: "Object" });
-        edgeUpdateArray = [];
-        for (let edgeId in allEdges) {
-            if (allEdges[edgeId].hasOwnProperty('relation') && allEdges[edgeId].relation.length < 30) {
-                allEdges[edgeId].label = allEdges[edgeId].relation;
-            };
-            edgeUpdateArray.push(allEdges[edgeId])
-        }
-        edges2.update(edgeUpdateArray);
 
-        var nodeColors1 = {};
-        allNodes = nodes1.get({ returnType: "Object" });
-        for (nodeId in allNodes) {
-            nodeColors1[nodeId] = allNodes[nodeId].color;
-        }
-        allEdges = edges1.get({ returnType: "Object" });
-        edgeUpdateArray = [];
-        for (let edgeId in allEdges) {
-            if (allEdges[edgeId].hasOwnProperty('relation') && allEdges[edgeId].relation.length < 30) {
-                allEdges[edgeId].label = allEdges[edgeId].relation;
+        function backUpData(nodes, edges) {
+            const nodesOptions = nodes.map(function (node) {
+                return { value: node.id, text: node.id };
+            })
+
+            const nodeColors = {};
+            allNodes = nodes.get({ returnType: "Object" });
+            for (nodeId in allNodes) {
+                if (allNodes[nodeId].hasOwnProperty('shape') && allNodes[nodeId].shape === "triangle") {
+                    allNodes[nodeId].color = '#e8792e'
+                }
+                nodeColors[nodeId] = allNodes[nodeId].color;
+            }
+
+            allEdges = edges.get({ returnType: "Object" });
+            const edgeUpdateArray = [];
+            for (let edgeId in allEdges) {
+                if (allEdges[edgeId].hasOwnProperty('relation') && allEdges[edgeId].relation.length < 30) {
+                    allEdges[edgeId].label = allEdges[edgeId].relation;
+                };
+                edgeUpdateArray.push(allEdges[edgeId])
+            }
+            return {
+                nodesOptions: nodesOptions,
+                nodeColors: nodeColors,
+                edgeUpdateArray: edgeUpdateArray
             };
-            edgeUpdateArray.push(allEdges[edgeId])
         }
-        edges1.update(edgeUpdateArray);
+
+        const {
+            nodesOptions: nodesOptions1,
+            nodeColors: nodeColors1,
+            edgeUpdateArray: edgeUpdateArray1
+        } = syncData(nodes1, edges1);
+        edges1.update(edgeUpdateArray1);
+
+        const {
+            nodesOptions: nodesOptions2,
+            nodeColors: nodeColors2,
+            edgeUpdateArray: edgeUpdateArray2
+        } = syncData(nodes2, edges2);
+        edges2.update(edgeUpdateArray2);
+
+        const {
+            nodesOptions: nodesOptions3,
+            nodeColors: nodeColors3,
+            edgeUpdateArray: edgeUpdateArray3
+        } = syncData(nodes3, edges3);
+        edges3.update(edgeUpdateArray3);
 
         edges = edges1
         nodes = nodes1
         nodeColors = nodeColors1
-        nodes_option = nodes_option1
+        nodesOption = nodesOptions1
         const toggleButton = document.getElementById('toggleButton');
         const selectContainer = document.getElementById('selectContainer');
         selectContainer.style.display = 'none'
