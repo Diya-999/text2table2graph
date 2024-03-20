@@ -356,21 +356,21 @@
             nodesOptions: nodesOptions1,
             nodeColors: nodeColors1,
             edgeUpdateArray: edgeUpdateArray1
-        } = syncData(nodes1, edges1);
+        } = backUpData(nodes1, edges1);
         edges1.update(edgeUpdateArray1);
 
         const {
             nodesOptions: nodesOptions2,
             nodeColors: nodeColors2,
             edgeUpdateArray: edgeUpdateArray2
-        } = syncData(nodes2, edges2);
+        } = backUpData(nodes2, edges2);
         edges2.update(edgeUpdateArray2);
 
         const {
             nodesOptions: nodesOptions3,
             nodeColors: nodeColors3,
             edgeUpdateArray: edgeUpdateArray3
-        } = syncData(nodes3, edges3);
+        } = backUpData(nodes3, edges3);
         edges3.update(edgeUpdateArray3);
 
         edges = edges1
