@@ -12,3 +12,4 @@ python df2df_type2.py --input_path ./df.pkl --output_path ./df_concat.pkl
 
 python df2json.py --input_path ./df.pkl --output_folder ./json
 python df2json.py --input_path ./df_concat.pkl --output_folder ./json2
+python df2json.py --input_path ./df.pkl ./df_concat.pkl --output_folder ./json3
