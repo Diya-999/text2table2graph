@@ -180,7 +180,7 @@
                                 onclick="neighbourhoodHighlight({nodes: []});">Reset Selection</button>
                         </div>
 
-                        <div class="col-7">
+                        <div class="col-4">
                             <span> filter:</span>
                             <label class="btn switch">
                                 <input type="checkbox" id="toggleButton">
@@ -194,10 +194,15 @@
                                 <input type="checkbox" id="toggleButton3">
                                 <span class="slider round"></span>
                             </label>
-                            <label class="btn switch" id="auto-toggle-switch">
-                                <input type="checkbox" id="toggleButton4">
-                                <span class="slider round"></span>
-                            </label>
+                        </div>
+                        <div class="col-4">
+                            <!-- <span style="font-size:small;">Network version:</span> -->
+                            <select onchange="changeNetworkVersion(value);" name="NetworkVersion"
+                                id="select-network-version" style="width: 30%;">
+                                <option value="V1" selected>V1</option>
+                                <option value="V2">V2</option>
+                                <option value="V3">V3</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -428,7 +433,16 @@
                 field: "text",
                 direction: "asc"
             },
-            options: nodes_option
+            options: nodesOption
+        });
+
+        let networkVersionControl = new TomSelect('#select-network-version', {
+            create: false,
+            sortField: {
+                field: "text",
+                direction: "asc"
+            },
+            controlInput: null,
         });
 
         // explicitly using onItemAdd and this function as we need to save multiple values
@@ -716,7 +730,6 @@
 
             // adding nodes and edges to the graph
             data = { nodes: nodes1, edges: edges1 };
-            let datasetVersion = 1;
 
             var options = {
                 "configure": {
@@ -762,60 +775,6 @@
             network = new vis.Network(container, data, options);
             allNodes = nodes.get({ returnType: "Object" });
             allEdges = edges.get({ returnType: "Object" });
-
-            const toggleButton4 = document.getElementById('toggleButton4');
-            toggleButton4.addEventListener('click', function () {
-                // reset all nodes
-                nodeUpdateArray = [];
-                for (let nodeId in allNodes) {
-                    allNodes[nodeId].color = nodeColors[nodeId];
-                    if (allNodes[nodeId].hiddenLabel !== undefined) {
-                        allNodes[nodeId].label = allNodes[nodeId].hiddenLabel;
-                        allNodes[nodeId].hiddenLabel = undefined;
-                    }
-                    nodeUpdateArray.push(allNodes[nodeId])
-                }
-                nodes.update(nodeUpdateArray);
-
-                edgeUpdateArray = [];
-                for (let edgeId in allEdges) {
-                    allEdges[edgeId].color = nodeColors[allEdges[edgeId]['from']];
-                    edgeUpdateArray.push(allEdges[edgeId])
-                }
-                edges.update(edgeUpdateArray);
-                
-                if (datasetVersion === 1) {
-                    network.setData({
-                        nodes: nodes2,
-                        edges: edges2,
-                    });
-                    nodes = nodes2;
-                    edges = edges2;
-                    nodeColors = nodeColors2;
-                    nodes_option = nodes_option2;
-                    datasetVersion = 2
-                } else if (datasetVersion === 2) {
-                    network.setData({
-                        nodes: nodes1,
-                        edges: edges1,
-                    });
-                    nodes = nodes1;
-                    edges = edges1;
-                    nodeColors = nodeColors1;
-                    nodes_option = nodes_option1;
-                    datasetVersion = 1
-                }
-                nodeControl.clear(); 
-                nodeControl.clearOptions();
-                for (let optionId in nodes_option) {
-                    nodeControl.addOption(nodes_option[optionId])
-                };
-
-                allNodes = nodes.get({ returnType: "Object" });
-                allEdges = edges.get({ returnType: "Object" });
-
-            });
-
 
             var toggleSwitch = document.querySelector('#auto-toggle-switch');
             network.on("selectNode", neighbourhoodHighlight);
