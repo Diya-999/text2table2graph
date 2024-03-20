@@ -2,7 +2,7 @@ import pandas as pd
 import argparse
 
 def concat_df(df):
-    assert set(df.columns) == set({'entity 1', 'entity 2', 'relation', 'source'})
+    assert set(df.columns) == set({'entity 1', 'entity 2', 'relation', 'source','attr'})
     df['relation'] = 'has'
     df2 = df.copy()
     df2['entity 2'] = df2['source']
@@ -11,6 +11,7 @@ def concat_df(df):
 
     df_concat = pd.concat([df,df2],axis=0)
     df_concat = df_concat.drop_duplicates(subset=['entity 1','entity 2']).reset_index(drop=True)
+    df_concat['attr'] =  [{'entity 1':{'shape':'dot'},'entity 2':{'shape':'triangle'}}]*df_concat.shape[0]
     return df_concat
 
 if __name__ == '__main__':

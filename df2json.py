@@ -20,17 +20,19 @@ def build_network(df):
     node2 = df['entity 2']
     edge_label = df['relation']
     source = df['source']
-    edge_data = zip(node1, node2, edge_label,source)
+    attr = df['attr']
+    edge_data = zip(node1, node2, edge_label,source, attr)
     for e in edge_data:
-        n1 = add_newline(e[0])
+        n1 = add_newline(str(e[0]))
         if e[1] != e[3]:
-            n2 = add_newline(e[1])
+            n2 = add_newline(str(e[1]))
         else: #if node2 == source: e[3]
-            n2 = add_newline(e[1],'/',2)
-        r = add_newline(e[2])
-        s = e[3]
-        got_net.add_node(n1, n1, title=n1,size=16)
-        got_net.add_node(n2, n2, title=n2,size=16)
+            n2 = add_newline(str(e[1]),'/',2)
+        r = add_newline(str(e[2]))
+        s = str(e[3])
+        a = e[4]
+        got_net.add_node(n1, n1, title=n1,size=16, shape=a['entity 1']['shape'])
+        got_net.add_node(n2, n2, title=n2,size=16, shape=a['entity 2']['shape'])
         got_net.add_edge(n1, n2, arrows={"to": {"enabled": False}}, relation=r,news_source=s,title=r)
     return got_net
 
@@ -67,7 +69,7 @@ if __name__ == '__main__':
         df_list.append(tmp)
     df = pd.concat(df_list,axis=0)
 
-    if set(df.columns) == set({'entity 1', 'entity 2', 'relation', 'source'}):
+    if set(df.columns) == set({'entity 1', 'entity 2', 'relation', 'source','attr'}):
         network = build_network(df)
         save_network2json(network, args.output_folder)
 
