@@ -4,8 +4,6 @@ pptx
 final_rs.txt
 train.text
 *.ipynb
-*.pkl
-dj_news
 json/
 json2/
 text2table2graph_share_file/
