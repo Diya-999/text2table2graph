@@ -1,0 +1,858 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+
+    <script src="lib/bindings/utils.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css"
+        integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js"
+        integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <link href="lib/tom-select/tom-select.css" rel="stylesheet">
+    <script src="lib/tom-select/tom-select.complete.min.js"></script>
+
+    <center>
+        <h1></h1>
+    </center>
+
+    <!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+        crossorigin="anonymous"></script>
+
+
+    <center>
+        <h1></h1>
+    </center>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 45px;
+            height: 26px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        input:checked+.slider {
+            background-color: #2196F3;
+        }
+
+        input:focus+.slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        input:checked+.slider:before {
+            -webkit-transform: translateX(20px);
+            -ms-transform: translateX(20px);
+            transform: translateX(20px);
+        }
+
+        /* Rounded sliders */
+        .slider.round {
+            border-radius: 26px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+
+        #company-logo {
+            z-index: 9999;
+            background-color: black;
+            width: 100%;
+            padding: 5px;
+            padding-left: 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 45px;
+        }
+
+        .card {
+            margin-top: 45px;
+        }
+
+        .card-header {
+            height: 50px;
+        }
+
+        .form-select {
+            height: 45px;
+        }
+
+        .card-body {
+            /* white-space: nowrap;
+            position: relative; */
+            display: flex;
+            width: 100%;
+        }
+
+        #mynetwork {
+            /* width: 50%; */
+            height: 600px;
+            background-color: #ffffff;
+            border: 1px solid lightgray;
+            /* display: inline-block; */
+            width: 100%;
+            transition: width 0.3s ease;
+        }
+
+        #config {
+            height: 600px;
+            width: 0;
+            overflow: hidden;
+            transition: width 0.3s ease;
+        }
+
+        #edge-attr {
+            height: 600px;
+            width: 0;
+            overflow: hidden;
+            transition: width 0.3s ease;
+        }
+
+        #selectContainer {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="company-logo">
+        <img
+            src="https://static.wixstatic.com/media/8d2c3e_a6efe65d8c07417389a595c3cea6b2de~mv2.png/v1/fill/w_192,h_33,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/FCCA%20logo%20trans%20white.png">
+    </div>
+
+    <div class="card" style="width: 100%">
+        <div id="select-menu" class="card-header">
+            <div class="row no-gutters">
+                <div class="col-8 pb-2" style="width: 50%;">
+                    <select aria-label="Default select example" onchange="selectNode([value]);" id="select-node"
+                        placeholder="Select node...">
+                        <!-- <option selected>Select a Node by ID</option> -->
+                        <option value="">Select a Node by ID...</option>
+                    </select>
+                </div>
+                <div class="col-4 pb-2" style="width: 50%;">
+                    <div class="row">
+                        <div class="col-3">
+                            <button type="button" class="btn btn-xs btn-primary btn-block" style="font-size:x-small;"
+                                onclick="neighbourhoodHighlight({nodes: []});">Reset Selection</button>
+                        </div>
+
+                        <div class="col-7">
+                            <span> filter:</span>
+                            <label class="btn switch">
+                                <input type="checkbox" id="toggleButton">
+                                <span class="slider round"></span>
+                            </label>
+                            <label class="btn switch">
+                                <input type="checkbox" id="toggleButton2">
+                                <span class="slider round"></span>
+                            </label>
+                            <label class="btn switch" id="auto-toggle-switch">
+                                <input type="checkbox" id="toggleButton3">
+                                <span class="slider round"></span>
+                            </label>
+                            <label class="btn switch" id="auto-toggle-switch">
+                                <input type="checkbox" id="toggleButton4">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="selectContainer">
+        <div id="filter-menu" class="card-header">
+            <div class="row no-gutters">
+                <div class="col-3 pb-2">
+                    <select aria-label="Default select example" onchange="updateFilter(value, 'item', 1)"
+                        id="select-item">
+                        <option value="">Select a network item</option>
+                        <option value="edge">edge</option>
+                        <option value="node">node</option>
+                    </select>
+                </div>
+                <div class="col-3 pb-2">
+                    <select aria-label="Default select example" onchange="updateFilter(value, 'property', 1)"
+                        id="select-property">
+                        <option value="">Select a property...</option>
+                    </select>
+                </div>
+                <div class="col-3 pb-2">
+                    <select aria-label="Default select example" id="select-value">
+                        <option value="">Select value(s)...</option>
+                    </select>
+                </div>
+                <div class="col-1 pb-2">
+                    <button type="button" class="btn btn-xs btn-primary btn-block" style="font-size:x-small;"
+                        onclick="highlightFilter2(filter, filter2);">Filter</button>
+                </div>
+                <div class="col-2 pb-2">
+                    <button type="button" class="btn btn-xs btn-primary btn-block" style="font-size:x-small;"
+                        onclick="clearFilter_1_and_2(true)">Reset Selection</button>
+                </div>
+            </div>
+        </div>
+        <!-- ---------- -->
+        <div id="filter-menu-2" class="card-header">
+            <div class="row no-gutters">
+                <div class="col-3 pb-2">
+                    <select aria-label="Default select example" onchange="updateFilter(value, 'item', 2)"
+                        id="select-item-2">
+                        <option value="">Select a network item</option>
+                        <option value="edge">edge</option>
+                        <option value="node">node</option>
+                    </select>
+                </div>
+                <div class="col-3 pb-2">
+                    <select aria-label="Default select example" onchange="updateFilter(value, 'property', 2)"
+                        id="select-property-2">
+                        <option value="">Select a property...</option>
+                    </select>
+                </div>
+                <div class="col-3 pb-2">
+                    <select aria-label="Default select example" id="select-value-2">
+                        <option value="">Select value(s)...</option>
+                    </select>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div id="mynetwork"></div>
+        <div id="edge-attr"></div>
+        <div id="config"></div>
+
+    </div>
+    </div>
+
+    <script type="text/javascript" src="json/nodes.json"></script>
+    <script type="text/javascript" src="json/edges.json"></script>
+    <script type="text/javascript">
+        edges1 = edges;
+        nodes1 = nodes;
+        var nodes_option1 = nodes1.map(function (node) {
+                return { value: node.id, text: node.id };
+            })
+    </script>
+    <script type="text/javascript" src="json2/nodes.json"></script>
+    <script type="text/javascript" src="json2/edges.json"></script>
+    <script type="text/javascript">
+        edges2 = edges;
+        nodes2 = nodes;
+        var nodes_option2 = nodes2.map(function (node) {
+                return { value: node.id, text: node.id };
+            })
+    </script>
+    <script type="text/javascript">
+        // initialize global variables.
+        var clickEdge;
+        var preEdgeId
+        var edges;
+        var nodes;
+        var nodes_option
+        var allNodes;
+        var allEdges;
+        var nodeColors;
+        var originalNodes;
+        var network;
+        var container;
+        var options, data;
+        var highlightActive
+        var filterActive
+        var filter = {
+            item: '',
+            property: '',
+            value: []
+        };
+        var filter2 = {
+            item: '',
+            property: '',
+            value: []
+        };
+        var nodeColors2 = {};
+        allNodes = nodes2.get({ returnType: "Object" });
+        for (nodeId in allNodes) {
+            nodeColors2[nodeId] = allNodes[nodeId].color;
+        }
+        allEdges = edges2.get({ returnType: "Object" });
+        edgeUpdateArray = [];
+        for (let edgeId in allEdges) {
+            if (allEdges[edgeId].hasOwnProperty('relation') && allEdges[edgeId].relation.length < 30) {
+                allEdges[edgeId].label = allEdges[edgeId].relation;
+            };
+            edgeUpdateArray.push(allEdges[edgeId])
+        }
+        edges2.update(edgeUpdateArray);
+
+        var nodeColors1 = {};
+        allNodes = nodes1.get({ returnType: "Object" });
+        for (nodeId in allNodes) {
+            nodeColors1[nodeId] = allNodes[nodeId].color;
+        }
+        allEdges = edges1.get({ returnType: "Object" });
+        edgeUpdateArray = [];
+        for (let edgeId in allEdges) {
+            if (allEdges[edgeId].hasOwnProperty('relation') && allEdges[edgeId].relation.length < 30) {
+                allEdges[edgeId].label = allEdges[edgeId].relation;
+            };
+            edgeUpdateArray.push(allEdges[edgeId])
+        }
+        edges1.update(edgeUpdateArray);
+
+        edges = edges1
+        nodes = nodes1
+        nodeColors = nodeColors1
+        nodes_option = nodes_option1
+        const toggleButton = document.getElementById('toggleButton');
+        const selectContainer = document.getElementById('selectContainer');
+        selectContainer.style.display = 'none'
+        toggleButton.addEventListener('click', function () {
+            if (selectContainer.style.display === 'none') {
+                selectContainer.style.display = 'block';
+            } else {
+                selectContainer.style.display = 'none';
+            }
+        });
+
+        const toggleButton2 = document.getElementById('toggleButton2');
+        const config = document.getElementById('config');
+        const mynetwork = document.getElementById('mynetwork');
+        const edgeAttr = document.getElementById('edge-attr');
+        const edgeHiddenProp = ['to', 'from', 'arrows', 'color', 'hiddenLabel']
+        const nodeHiddenProp = ['hidden', 'savedLabel', 'hiddenLabel', 'size', 'color', 'shape', 'value']
+        let isPhysicsExpanded = false;
+        let isAttrExpanded = false;
+
+        toggleButton2.addEventListener('click', function () {
+            if (isAttrExpanded) {
+                if (isPhysicsExpanded) {
+                    mynetwork.style.width = '80%';
+                    config.style.width = '0';
+                    edgeAttr.style.width = '20%';
+                } else {
+                    mynetwork.style.width = '50%';
+                    config.style.width = '30%';
+                    edgeAttr.style.width = '20%';
+                }
+            } else {
+                if (isPhysicsExpanded) {
+                    mynetwork.style.width = '99%';
+                    config.style.width = '0';
+                    edgeAttr.style.width = '0';
+                } else {
+                    mynetwork.style.width = '70%';
+                    config.style.width = '30%';
+                    edgeAttr.style.width = '0';
+                }
+            }
+            isPhysicsExpanded = !isPhysicsExpanded;
+        });
+
+        const toggleButton3 = document.getElementById('toggleButton3');
+        toggleButton3.addEventListener('click', function () {
+            if (isPhysicsExpanded) {
+                if (isAttrExpanded) {
+                    mynetwork.style.width = '70%';
+                    config.style.width = '30%';
+                    edgeAttr.style.width = '0';
+                } else {
+                    mynetwork.style.width = '50%';
+                    config.style.width = '30%';
+                    edgeAttr.style.width = '20%';
+                }
+            } else {
+                if (isAttrExpanded) {
+                    mynetwork.style.width = '99%';
+                    config.style.width = '0';
+                    edgeAttr.style.width = '0';
+                } else {
+                    mynetwork.style.width = '80%';
+                    config.style.width = '0';
+                    edgeAttr.style.width = '20%';
+                }
+            }
+            isAttrExpanded = !isAttrExpanded;
+        });
+
+        let nodeControl = new TomSelect('#select-node', {
+            create: false,
+            sortField: {
+                field: "text",
+                direction: "asc"
+            },
+            options: nodes_option
+        });
+
+        // explicitly using onItemAdd and this function as we need to save multiple values
+        let updateValueFilter = function () {
+            return function () {
+                filter['value'].push(arguments[0])
+            }
+        }
+
+        let valueControl = new TomSelect("#select-value", {
+            maxItems: null,
+            valueField: 'id',
+            labelField: 'title',
+            searchField: 'title',
+            create: false,
+            sortField: {
+                field: "text",
+                direction: "asc"
+            },
+            onItemAdd: updateValueFilter()
+        });
+
+        let addValues = function () {
+            return function () {
+                // clear the current value options and add the selected attribute values
+                // tom-select handles duplicates
+                let selectedProperty = arguments[0];
+                valueControl.clear();
+                valueControl.clearOptions();
+                filter['value'] = []
+                if (filter['item'] === 'node') {
+                    for (let each in allNodes) {
+                        valueControl.addOption({
+                            id: allNodes[each][selectedProperty],
+                            title: allNodes[each][selectedProperty]
+                        })
+                    }
+                }
+                else if (filter['item'] === 'edge') {
+                    for (let each in allEdges) {
+                        valueControl.addOption({
+                            id: allEdges[each][selectedProperty],
+                            title: allEdges[each][selectedProperty]
+                        })
+                    }
+                }
+            }
+        };
+
+        let propControl = new TomSelect("#select-property", {
+            valueField: 'id',
+            labelField: 'title',
+            searchField: 'title',
+            create: false,
+            sortField: {
+                field: "text",
+                direction: "asc"
+            },
+            onItemAdd: addValues()
+        });
+
+        let addProperties = function () {
+            return function () {
+                // loops through the selected network item and adds the attributes to dropdown
+                // tom-select handles duplicates
+                clearFilter(false)
+                if (arguments[0] === 'edge') {
+                    for (let each in allEdges) {
+                        if (allEdges.hasOwnProperty(each)) {
+                            for (let eachProp in allEdges[each]) {
+                                if (allEdges[each].hasOwnProperty(eachProp) && !edgeHiddenProp.includes(eachProp)) {
+                                    propControl.addOption({ id: eachProp, title: eachProp })
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (arguments[0] === 'node') {
+                    for (let each in allNodes) {
+                        if (allNodes.hasOwnProperty(each)) {
+                            for (let eachProp in allNodes[each]) {
+                                if (allNodes[each].hasOwnProperty(eachProp) && !nodeHiddenProp.includes(eachProp)) {
+                                    propControl.addOption({ id: eachProp, title: eachProp })
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        let itemControl = new TomSelect("#select-item", {
+            create: false,
+            sortField: {
+                field: "text",
+                direction: "asc"
+            },
+            onItemAdd: addProperties()
+        });
+
+        function clearFilter(reset) {
+            // utility function to clear all the selected filter options
+            // if reset is set to true, the existing filter will be removed
+            // else, only the dropdown options are cleared
+            propControl.clear();
+            propControl.clearOptions();
+            valueControl.clear();
+            valueControl.clearOptions();
+            filter = {
+                item: '',
+                property: '',
+                value: []
+            }
+            if (reset) {
+                itemControl.clear();
+                filterHighlightNodesEdges(false)
+            }
+        }
+
+        function clearFilter_1_and_2(reset) {
+            // utility function to clear all the selected filter options
+            // if reset is set to true, the existing filter will be removed
+            // else, only the dropdown options are cleared
+            propControl.clear();
+            propControl.clearOptions();
+            valueControl.clear();
+            valueControl.clearOptions();
+            filter = {
+                item: '',
+                property: '',
+                value: []
+            }
+            propControl2.clear();
+            propControl2.clearOptions();
+            valueControl2.clear();
+            valueControl2.clearOptions();
+            filter2 = {
+                item: '',
+                property: '',
+                value: []
+            }
+            if (reset) {
+                itemControl.clear();
+                itemControl2.clear();
+                filterHighlightNodesEdges(false);
+            }
+        }
+
+        function updateFilter(value, key, menuId) {
+            // key could be 'item' or 'property' and value is as selected in dropdown
+            //   filter[key] = value
+            if (menuId === 1) {
+                filter[key] = value;
+            } else if (menuId === 2) {
+                filter2[key] = value;
+            }
+        }
+
+        ///////
+        // explicitly using onItemAdd and this function as we need to save multiple values
+        let updateValueFilter2 = function () {
+            return function () {
+                filter2['value'].push(arguments[0])
+            }
+        }
+        let valueControl2 = new TomSelect("#select-value-2", {
+            maxItems: null,
+            valueField: 'id',
+            labelField: 'title',
+            searchField: 'title',
+            create: false,
+            sortField: {
+                field: "text",
+                direction: "asc"
+            },
+            onItemAdd: updateValueFilter2()
+        });
+
+        let addValues2 = function () {
+            return function () {
+                // clear the current value options and add the selected attribute values
+                // tom-select handles duplicates
+                let selectedProperty2 = arguments[0];
+                valueControl2.clear();
+                valueControl2.clearOptions();
+                filter2['value'] = []
+                if (filter2['item'] === 'node') {
+                    for (let each in allNodes) {
+                        valueControl2.addOption({
+                            id: allNodes[each][selectedProperty2],
+                            title: allNodes[each][selectedProperty2]
+                        })
+                    }
+                }
+                else if (filter2['item'] === 'edge') {
+                    for (let each in allEdges) {
+                        valueControl2.addOption({
+                            id: allEdges[each][selectedProperty2],
+                            title: allEdges[each][selectedProperty2]
+                        })
+                    }
+                }
+            }
+        };
+
+        let propControl2 = new TomSelect("#select-property-2", {
+            valueField: 'id',
+            labelField: 'title',
+            searchField: 'title',
+            create: false,
+            sortField: {
+                field: "text",
+                direction: "asc"
+            },
+            onItemAdd: addValues2()
+        });
+
+        let addProperties2 = function () {
+            return function () {
+                // loops through the selected network item and adds the attributes to dropdown
+                // tom-select handles duplicates
+                clearFilter2(false)
+                if (arguments[0] === 'edge') {
+                    for (let each in allEdges) {
+                        if (allEdges.hasOwnProperty(each)) {
+                            for (let eachProp in allEdges[each]) {
+                                if (allEdges[each].hasOwnProperty(eachProp) && !edgeHiddenProp.includes(eachProp)) {
+                                    propControl2.addOption({ id: eachProp, title: eachProp })
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (arguments[0] === 'node') {
+                    for (let each in allNodes) {
+                        if (allNodes.hasOwnProperty(each)) {
+                            for (let eachProp in allNodes[each]) {
+                                if (allNodes[each].hasOwnProperty(eachProp) && !nodeHiddenProp.includes(eachProp)) {
+                                    propControl2.addOption({ id: eachProp, title: eachProp })
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        let itemControl2 = new TomSelect("#select-item-2", {
+            create: false,
+            sortField: {
+                field: "text",
+                direction: "asc"
+            },
+            onItemAdd: addProperties2()
+        });
+
+        function clearFilter2(reset) {
+            // utility function to clear all the selected filter options
+            // if reset is set to true, the existing filter will be removed
+            // else, only the dropdown options are cleared
+            propControl2.clear();
+            propControl2.clearOptions();
+            valueControl2.clear();
+            valueControl2.clearOptions();
+            filter2 = {
+                item: '',
+                property: '',
+                value: []
+            }
+            if (reset) {
+                itemControl2.clear();
+                filterHighlightNodesEdges(false)
+            }
+        };
+
+        // This method is responsible for drawing the graph, returns the drawn network
+        function drawGraph() {
+            var container = document.getElementById('mynetwork');
+
+            // parsing and collecting nodes and edges from the python
+            // nodes = new vis.DataSet([{ "color": "#97c2fc", "id": "Aemon", "label": "Aemon", "shape": "dot", "title": "Aemon Neighbors:\u003cbr\u003eSamwell\u003cbr\u003eGrenn", "value": 2 }, { "color": "#97c2fc", "id": "Grenn", "label": "Grenn", "shape": "dot", "title": "Grenn Neighbors:\u003cbr\u003eAemon", "value": 1 }, { "color": "#97c2fc", "id": "Samwell", "label": "Samwell", "shape": "dot", "title": "Samwell Neighbors:\u003cbr\u003eAemon\u003cbr\u003eBran", "value": 2 }, { "color": "#97c2fc", "id": "Aerys", "label": "Aerys", "shape": "dot", "title": "Aerys Neighbors:\u003cbr\u003eRobert\u003cbr\u003eTyrion\u003cbr\u003eJaime\u003cbr\u003eTywin", "value": 4 }, { "color": "#97c2fc", "id": "Jaime", "label": "Jaime", "shape": "dot", "title": "Jaime Neighbors:\u003cbr\u003eAerys\u003cbr\u003eArya", "value": 2 }, { "color": "#97c2fc", "id": "Robert", "label": "Robert", "shape": "dot", "title": "Robert Neighbors:\u003cbr\u003eAerys\u003cbr\u003eArya", "value": 2 }, { "color": "#97c2fc", "id": "Tyrion", "label": "Tyrion", "shape": "dot", "title": "Tyrion Neighbors:\u003cbr\u003eAerys\u003cbr\u003eArya", "value": 2 }, { "color": "#97c2fc", "id": "Tywin", "label": "Tywin", "shape": "dot", "title": "Tywin Neighbors:\u003cbr\u003eAerys", "value": 1 }, { "color": "#97c2fc", "id": "Alliser", "label": "Alliser", "shape": "dot", "title": "Alliser Neighbors:\u003cbr\u003eMance", "value": 1 }, { "color": "#97c2fc", "id": "Mance", "label": "Mance", "shape": "dot", "title": "Mance Neighbors:\u003cbr\u003eAlliser", "value": 1 }, { "color": "#97c2fc", "id": "Amory", "label": "Amory", "shape": "dot", "title": "Amory Neighbors:\u003cbr\u003eOberyn", "value": 1 }, { "color": "#97c2fc", "id": "Oberyn", "label": "Oberyn", "shape": "dot", "title": "Oberyn Neighbors:\u003cbr\u003eAmory", "value": 1 }, { "color": "#97c2fc", "id": "Arya", "label": "Arya", "shape": "dot", "title": "Arya Neighbors:\u003cbr\u003eJoffrey\u003cbr\u003eBran\u003cbr\u003eGregor\u003cbr\u003eRobert\u003cbr\u003eBeric\u003cbr\u003eCersei\u003cbr\u003eJaime\u003cbr\u003eThoros\u003cbr\u003eAnguy\u003cbr\u003eRoose\u003cbr\u003eRickon\u003cbr\u003eJon\u003cbr\u003eTyrion\u003cbr\u003eSandor\u003cbr\u003eBrynden\u003cbr\u003eGendry", "value": 16 }, { "color": "#97c2fc", "id": "Anguy", "label": "Anguy", "shape": "dot", "title": "Anguy Neighbors:\u003cbr\u003eBeric\u003cbr\u003eArya", "value": 2 }, { "color": "#97c2fc", "id": "Beric", "label": "Beric", "shape": "dot", "title": "Beric Neighbors:\u003cbr\u003eThoros\u003cbr\u003eAnguy\u003cbr\u003eArya\u003cbr\u003eGendry", "value": 4 }, { "color": "#97c2fc", "id": "Bran", "label": "Bran", "shape": "dot", "title": "Bran Neighbors:\u003cbr\u003eJojen\u003cbr\u003eNan\u003cbr\u003eTheon\u003cbr\u003eArya\u003cbr\u003eLuwin\u003cbr\u003eMeera\u003cbr\u003eCatelyn\u003cbr\u003eHodor\u003cbr\u003eJon\u003cbr\u003eRickon\u003cbr\u003eSamwell", "value": 11 }, { "color": "#97c2fc", "id": "Brynden", "label": "Brynden", "shape": "dot", "title": "Brynden Neighbors:\u003cbr\u003eWalder\u003cbr\u003eArya\u003cbr\u003eLothar\u003cbr\u003eCatelyn\u003cbr\u003eBrynden", "value": 5 }, { "color": "#97c2fc", "id": "Cersei", "label": "Cersei", "shape": "dot", "title": "Cersei Neighbors:\u003cbr\u003eCatelyn\u003cbr\u003eArya", "value": 2 }, { "color": "#97c2fc", "id": "Gendry", "label": "Gendry", "shape": "dot", "title": "Gendry Neighbors:\u003cbr\u003eBeric\u003cbr\u003eArya", "value": 2 }, { "color": "#97c2fc", "id": "Gregor", "label": "Gregor", "shape": "dot", "title": "Gregor Neighbors:\u003cbr\u003eBronn\u003cbr\u003eArya", "value": 2 }, { "color": "#97c2fc", "id": "Joffrey", "label": "Joffrey", "shape": "dot", "title": "Joffrey Neighbors:\u003cbr\u003eArya", "value": 1 }, { "color": "#97c2fc", "id": "Jon", "label": "Jon", "shape": "dot", "title": "Jon Neighbors:\u003cbr\u003eArya\u003cbr\u003eBran", "value": 2 }, { "color": "#97c2fc", "id": "Rickon", "label": "Rickon", "shape": "dot", "title": "Rickon Neighbors:\u003cbr\u003eArya\u003cbr\u003eBran", "value": 2 }, { "color": "#97c2fc", "id": "Roose", "label": "Roose", "shape": "dot", "title": "Roose Neighbors:\u003cbr\u003eArya", "value": 1 }, { "color": "#97c2fc", "id": "Sandor", "label": "Sandor", "shape": "dot", "title": "Sandor Neighbors:\u003cbr\u003eArya", "value": 1 }, { "color": "#97c2fc", "id": "Thoros", "label": "Thoros", "shape": "dot", "title": "Thoros Neighbors:\u003cbr\u003eBeric\u003cbr\u003eArya", "value": 2 }, { "color": "#97c2fc", "id": "Balon", "label": "Balon", "shape": "dot", "title": "Balon Neighbors:\u003cbr\u003eLoras", "value": 1 }, { "color": "#97c2fc", "id": "Loras", "label": "Loras", "shape": "dot", "title": "Loras Neighbors:\u003cbr\u003eBrienne\u003cbr\u003eBalon", "value": 2 }, { "color": "#97c2fc", "id": "Belwas", "label": "Belwas", "shape": "dot", "title": "Belwas Neighbors:\u003cbr\u003eIllyrio\u003cbr\u003eBarristan", "value": 2 }, { "color": "#97c2fc", "id": "Barristan", "label": "Barristan", "shape": "dot", "title": "Barristan Neighbors:\u003cbr\u003eBelwas", "value": 1 }, { "color": "#97c2fc", "id": "Illyrio", "label": "Illyrio", "shape": "dot", "title": "Illyrio Neighbors:\u003cbr\u003eBelwas", "value": 1 }, { "color": "#97c2fc", "id": "Hodor", "label": "Hodor", "shape": "dot", "title": "Hodor Neighbors:\u003cbr\u003eBran", "value": 1 }, { "color": "#97c2fc", "id": "Jojen", "label": "Jojen", "shape": "dot", "title": "Jojen Neighbors:\u003cbr\u003eBran", "value": 1 }, { "color": "#97c2fc", "id": "Luwin", "label": "Luwin", "shape": "dot", "title": "Luwin Neighbors:\u003cbr\u003eBran", "value": 1 }, { "color": "#97c2fc", "id": "Meera", "label": "Meera", "shape": "dot", "title": "Meera Neighbors:\u003cbr\u003eBran", "value": 1 }, { "color": "#97c2fc", "id": "Nan", "label": "Nan", "shape": "dot", "title": "Nan Neighbors:\u003cbr\u003eBran", "value": 1 }, { "color": "#97c2fc", "id": "Theon", "label": "Theon", "shape": "dot", "title": "Theon Neighbors:\u003cbr\u003eBran", "value": 1 }, { "color": "#97c2fc", "id": "Brienne", "label": "Brienne", "shape": "dot", "title": "Brienne Neighbors:\u003cbr\u003eCatelyn\u003cbr\u003eLoras", "value": 2 }, { "color": "#97c2fc", "id": "Bronn", "label": "Bronn", "shape": "dot", "title": "Bronn Neighbors:\u003cbr\u003eGregor\u003cbr\u003ePodrick", "value": 2 }, { "color": "#97c2fc", "id": "Podrick", "label": "Podrick", "shape": "dot", "title": "Podrick Neighbors:\u003cbr\u003eBronn", "value": 1 }, { "color": "#97c2fc", "id": "Lothar", "label": "Lothar", "shape": "dot", "title": "Lothar Neighbors:\u003cbr\u003eBrynden", "value": 1 }, { "color": "#97c2fc", "id": "Walder", "label": "Walder", "shape": "dot", "title": "Walder Neighbors:\u003cbr\u003eBrynden", "value": 1 }, { "color": "#97c2fc", "id": "Catelyn", "label": "Catelyn", "shape": "dot", "title": "Catelyn Neighbors:\u003cbr\u003eBran\u003cbr\u003eEdmure\u003cbr\u003eCersei\u003cbr\u003eBrienne\u003cbr\u003eBrynden", "value": 5 }, { "color": "#97c2fc", "id": "Edmure", "label": "Edmure", "shape": "dot", "title": "Edmure Neighbors:\u003cbr\u003eCatelyn", "value": 1 }]);
+            // edges = new vis.DataSet([{ "from": "Aemon", "to": "Grenn", "value": 5 }, { "from": "Aemon", "to": "Samwell", "value": 31 }, { "from": "Aerys", "to": "Jaime", "value": 18 }, { "from": "Aerys", "to": "Robert", "value": 6 }, { "from": "Aerys", "to": "Tyrion", "value": 5 }, { "from": "Aerys", "to": "Tywin", "value": 8 }, { "from": "Alliser", "to": "Mance", "value": 5 }, { "from": "Amory", "to": "Oberyn", "value": 5 }, { "from": "Arya", "to": "Anguy", "value": 11 }, { "from": "Arya", "to": "Beric", "value": 23 }, { "from": "Arya", "to": "Bran", "value": 9 }, { "from": "Arya", "to": "Brynden", "value": 6 }, { "from": "Arya", "to": "Cersei", "value": 5 }, { "from": "Arya", "to": "Gendry", "value": 43 }, { "from": "Arya", "to": "Gregor", "value": 7 }, { "from": "Arya", "to": "Jaime", "value": 11 }, { "from": "Arya", "to": "Joffrey", "value": 6 }, { "from": "Arya", "to": "Jon", "value": 7 }, { "from": "Arya", "to": "Rickon", "value": 8 }, { "from": "Arya", "to": "Robert", "value": 4 }, { "from": "Arya", "to": "Roose", "value": 5 }, { "from": "Arya", "to": "Sandor", "value": 46 }, { "from": "Arya", "to": "Thoros", "value": 18 }, { "from": "Arya", "to": "Tyrion", "value": 5 }, { "from": "Balon", "to": "Loras", "value": 4 }, { "from": "Belwas", "to": "Barristan", "value": 18 }, { "from": "Belwas", "to": "Illyrio", "value": 10 }, { "from": "Beric", "to": "Anguy", "value": 4 }, { "from": "Beric", "to": "Gendry", "value": 4 }, { "from": "Beric", "to": "Thoros", "value": 21 }, { "from": "Bran", "to": "Hodor", "value": 96 }, { "from": "Bran", "to": "Jojen", "value": 46 }, { "from": "Bran", "to": "Jon", "value": 12 }, { "from": "Bran", "to": "Luwin", "value": 4 }, { "from": "Bran", "to": "Meera", "value": 54 }, { "from": "Bran", "to": "Nan", "value": 14 }, { "from": "Bran", "to": "Rickon", "value": 35 }, { "from": "Bran", "to": "Samwell", "value": 11 }, { "from": "Bran", "to": "Theon", "value": 11 }, { "from": "Brienne", "to": "Loras", "value": 7 }, { "from": "Bronn", "to": "Gregor", "value": 5 }, { "from": "Bronn", "to": "Podrick", "value": 19 }, { "from": "Brynden", "to": "Brynden", "value": 7 }, { "from": "Brynden", "to": "Lothar", "value": 4 }, { "from": "Brynden", "to": "Walder", "value": 5 }, { "from": "Catelyn", "to": "Bran", "value": 4 }, { "from": "Catelyn", "to": "Brienne", "value": 7 }, { "from": "Catelyn", "to": "Brynden", "value": 8 }, { "from": "Catelyn", "to": "Cersei", "value": 4 }, { "from": "Catelyn", "to": "Edmure", "value": 16 }]);
+
+            // adding nodes and edges to the graph
+            data = { nodes: nodes1, edges: edges1 };
+            let datasetVersion = 1;
+
+            var options = {
+                "configure": {
+                    "enabled": true,
+                    "filter": [
+                        "physics"
+                    ]
+                },
+                "edges": {
+                    "color": {
+                        "inherit": true
+                    },
+                    "width": 4,
+                    "font": {
+                        "size": 10
+                    },
+                    "smooth": {
+                        "enabled": true,
+                        "type": "dynamic"
+                    }
+                },
+                "interaction": {
+                    "dragNodes": true,
+                    "hideEdgesOnDrag": false,
+                    "hideNodesOnDrag": false
+                },
+                "physics": {
+                    "enabled": true,
+                    "stabilization": {
+                        "enabled": true,
+                        "fit": true,
+                        "iterations": 1000,
+                        "onlyDynamicEdges": false,
+                        "updateInterval": 50
+                    }
+                }
+            };
+
+            // if this network requires displaying the configure window,
+            // put it in its div
+            options.configure["container"] = document.getElementById("config");
+
+            network = new vis.Network(container, data, options);
+            allNodes = nodes.get({ returnType: "Object" });
+            allEdges = edges.get({ returnType: "Object" });
+
+            const toggleButton4 = document.getElementById('toggleButton4');
+            toggleButton4.addEventListener('click', function () {
+                // reset all nodes
+                nodeUpdateArray = [];
+                for (let nodeId in allNodes) {
+                    allNodes[nodeId].color = nodeColors[nodeId];
+                    if (allNodes[nodeId].hiddenLabel !== undefined) {
+                        allNodes[nodeId].label = allNodes[nodeId].hiddenLabel;
+                        allNodes[nodeId].hiddenLabel = undefined;
+                    }
+                    nodeUpdateArray.push(allNodes[nodeId])
+                }
+                nodes.update(nodeUpdateArray);
+
+                edgeUpdateArray = [];
+                for (let edgeId in allEdges) {
+                    allEdges[edgeId].color = nodeColors[allEdges[edgeId]['from']];
+                    edgeUpdateArray.push(allEdges[edgeId])
+                }
+                edges.update(edgeUpdateArray);
+                
+                if (datasetVersion === 1) {
+                    network.setData({
+                        nodes: nodes2,
+                        edges: edges2,
+                    });
+                    nodes = nodes2;
+                    edges = edges2;
+                    nodeColors = nodeColors2;
+                    nodes_option = nodes_option2;
+                    datasetVersion = 2
+                } else if (datasetVersion === 2) {
+                    network.setData({
+                        nodes: nodes1,
+                        edges: edges1,
+                    });
+                    nodes = nodes1;
+                    edges = edges1;
+                    nodeColors = nodeColors1;
+                    nodes_option = nodes_option1;
+                    datasetVersion = 1
+                }
+                nodeControl.clear(); 
+                nodeControl.clearOptions();
+                for (let optionId in nodes_option) {
+                    nodeControl.addOption(nodes_option[optionId])
+                };
+
+                allNodes = nodes.get({ returnType: "Object" });
+                allEdges = edges.get({ returnType: "Object" });
+
+            });
+
+
+            var toggleSwitch = document.querySelector('#auto-toggle-switch');
+            network.on("selectNode", neighbourhoodHighlight);
+            network.on("selectEdge", function (obj) {
+                if (obj.nodes.length > 0) {
+                    return
+                }
+
+                clickEdge = obj;
+                edgeNeighbourhoodHighlight(clickEdge);
+                edgeId = clickEdge['edges'][0];
+                edgeAttr.innerText = edges.get(edgeId)['relation'];
+
+                if (!isAttrExpanded) {
+                    var target = obj.target;
+
+                    if (!toggleSwitch.contains(target)) {
+                        var checkbox = toggleSwitch.querySelector('input[type="checkbox"]');
+                        checkbox.checked = !checkbox.checked;
+                    }
+                    if (isPhysicsExpanded) {
+                        mynetwork.style.width = '50%';
+                        config.style.width = '30%';
+                        edgeAttr.style.width = '20%';
+                    } else {
+                        mynetwork.style.width = '80%';
+                        config.style.width = '0';
+                        edgeAttr.style.width = '20%';
+                    }
+                    isAttrExpanded = !isAttrExpanded;
+                }
+            });
+            return network;
+
+        }
+        drawGraph();
+    </script>
+</body>
+
+</html>
