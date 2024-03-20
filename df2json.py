@@ -56,12 +56,16 @@ def save_network2json(net,output_folder):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--input_path', type=str, default='./df.pkl')
+    parser.add_argument('--input_path', type=str, nargs='+', default=['./df.pkl'])
     parser.add_argument('--output_folder', type=str, default='./json')
 
     args = parser.parse_args()
-        
-    df = pd.read_pickle(args.input_path)
+
+    df_list = []
+    for path in args.input_path:
+        tmp = pd.read_pickle(path)
+        df_list.append(tmp)
+    df = pd.concat(df_list,axis=0)
 
     if set(df.columns) == set({'entity 1', 'entity 2', 'relation', 'source'}):
         network = build_network(df)
