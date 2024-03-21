@@ -18,22 +18,25 @@ def build_network(df):
 
     node1 = df['entity 1']
     node2 = df['entity 2']
-    edge_label = df['relation']
+    relation = df['relation']
     source = df['source']
     attr = df['attr']
-    edge_data = zip(node1, node2, edge_label,source, attr)
+    edge_data = zip(node1, node2, relation,source, attr)
     for e in edge_data:
         n1 = add_newline(str(e[0]))
-        if e[1] != e[3]:
-            n2 = add_newline(str(e[1]))
-        else: #if node2 == source: e[3]
-            n2 = add_newline(str(e[1]),'/',2)
+        n2 = e[1]
         r = add_newline(str(e[2]))
         s = str(e[3])
         a = e[4]
+        if 'summary' in a['entity 2']:  
+            n2 = add_newline(str(n2),'/',2)
+            r = a['entity 2']['summary']
+        else:
+            n2 = add_newline(str(n2))
+            
         got_net.add_node(n1, n1, title=n1,size=16, shape=a['entity 1']['shape'])
         got_net.add_node(n2, n2, title=n2,size=16, shape=a['entity 2']['shape'])
-        got_net.add_edge(n1, n2, arrows={"to": {"enabled": False}}, relation=r,news_source=s,title=r)
+        got_net.add_edge(n1, n2, arrows={"to": {"enabled": False}}, relation=r,news_source=s)
     return got_net
 
 def save_network2json(net,output_folder):
