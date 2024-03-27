@@ -3,8 +3,6 @@ from pyvis.network import Network
 import json
 import os
 import argparse
-import numpy as np
-import math
 
 def add_newline(s, split_sign=' ', word_index=3):
     split_s = s.split(split_sign)

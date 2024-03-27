@@ -56,14 +56,3 @@ if __name__ == '__main__':
         df.to_pickle(args.output_path)
     else:
         print("You should input add_attr_maps or input_attr_path")
-
-    # df_sum = pd.read_pickle(args.attr_path)
-    # df_sum = df_sum[args.attr_cols+[args.join_key]]
-    # if 'attr' not in df.columns:
-    #     df = df.apply(attr_init,axis = 1)
-
-    # df_concat = df.merge(df_sum, how='left', on=args.join_key)
-
-    # df = add_attr(df_concat, args.node_type, args.attr_cols)
-    # df.drop(columns=args.attr_cols,inplace=True)
-    # df.to_pickle(args.output_path)
