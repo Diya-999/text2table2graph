@@ -144,11 +144,25 @@
             transition: width 0.3s ease;
         }
 
-        #edge-attr {
+        #highlight-attr {
             height: 600px;
             width: 0;
             overflow: hidden;
             transition: width 0.3s ease;
+        }
+
+        #highlight-text {
+            height: 300px;
+            font-size: small;
+            border: 1px solid black;
+            overflow-y: scroll;
+        }
+
+        #highlight-ner {
+            height: 100px;
+            border: 1px solid black;
+            font-size: small;
+            overflow-y: scroll;
         }
 
         #selectContainer {
@@ -272,10 +286,17 @@
 
     <div class="card-body">
         <div id="mynetwork"></div>
-        <div id="edge-attr"></div>
-        <div id="config"></div>
+        <div id="highlight-attr">
+            <span id="highlight-text-title"></span>
+            <div id="highlight-text"></div>
 
-    </div>
+            <span>Name Entity list:</span>
+            <div id="highlight-ner">
+                <div id="highlight-name"></div>
+                <div id="highlight-tag"></div>
+            </div>
+        </div>
+        <div id="config"></div>
     </div>
 
     <script type="text/javascript" src="json/nodes.json"></script>
@@ -391,34 +412,38 @@
         const toggleButton2 = document.getElementById('toggleButton2');
         const config = document.getElementById('config');
         const mynetwork = document.getElementById('mynetwork');
-        const edgeAttr = document.getElementById('edge-attr');
+        const highlightAttr = document.getElementById('highlight-attr');
+        const highlightText = document.getElementById('highlight-text');
+        const highlightTextTitle = document.getElementById('highlight-text-title');
+        const highlightName = document.getElementById('highlight-name');
+        const highlightTag = document.getElementById('highlight-tag');
         const edgeHiddenProp = ['to', 'from', 'arrows', 'color', 'hiddenLabel']
         const nodeHiddenProp = ['hidden', 'savedLabel', 'hiddenLabel', 'size', 'color', 'shape', 'value']
         let isPhysicsExpanded = false;
-        let isAttrExpanded = false;
+        var isAttrExpanded = false;
 
         toggleButton2.addEventListener('click', function () {
             if (isAttrExpanded) {
                 if (isPhysicsExpanded) {
                     mynetwork.style.width = '80%';
                     config.style.width = '0';
-                    edgeAttr.style.width = '20%';
-                    edgeAttr.style.overflow='scroll';
+                    highlightAttr.style.width = '20%';
+                    // highlightAttr.style.overflow='scroll';
                 } else {
                     mynetwork.style.width = '50%';
                     config.style.width = '30%';
-                    edgeAttr.style.width = '20%';
-                    edgeAttr.style.overflow='scroll';
+                    highlightAttr.style.width = '20%';
+                    // highlightAttr.style.overflow='scroll';
                 }
             } else {
                 if (isPhysicsExpanded) {
                     mynetwork.style.width = '99%';
                     config.style.width = '0';
-                    edgeAttr.style.width = '0';
+                    highlightAttr.style.width = '0';
                 } else {
                     mynetwork.style.width = '70%';
                     config.style.width = '30%';
-                    edgeAttr.style.width = '0';
+                    highlightAttr.style.width = '0';
                 }
             }
             isPhysicsExpanded = !isPhysicsExpanded;
@@ -430,23 +455,23 @@
                 if (isAttrExpanded) {
                     mynetwork.style.width = '70%';
                     config.style.width = '30%';
-                    edgeAttr.style.width = '0';
+                    highlightAttr.style.width = '0';
                 } else {
                     mynetwork.style.width = '50%';
                     config.style.width = '30%';
-                    edgeAttr.style.width = '20%';
-                    edgeAttr.style.overflow='scroll';
+                    highlightAttr.style.width = '20%';
+                    // highlightAttr.style.overflow='scroll';
                 }
             } else {
                 if (isAttrExpanded) {
                     mynetwork.style.width = '99%';
                     config.style.width = '0';
-                    edgeAttr.style.width = '0';
+                    highlightAttr.style.width = '0';
                 } else {
                     mynetwork.style.width = '80%';
                     config.style.width = '0';
-                    edgeAttr.style.width = '20%';
-                    edgeAttr.style.overflow='scroll';
+                    highlightAttr.style.width = '20%';
+                    // highlightAttr.style.overflow='scroll';
                 }
             }
             isAttrExpanded = !isAttrExpanded;
@@ -812,8 +837,10 @@
                 clickEdge = obj;
                 edgeNeighbourhoodHighlight(clickEdge);
                 edgeId = clickEdge['edges'][0];
-                edgeAttr.innerText = edges.get(edgeId)['relation'];
-
+                highlightTextTitle.innerText = 'Relation:';
+                highlightText.innerText = edges.get(edgeId)['relation'];
+                highlightName.innerText = '';
+                highlightTag.innerText = '';
                 if (!isAttrExpanded) {
                     var target = obj.target;
 
@@ -824,13 +851,13 @@
                     if (isPhysicsExpanded) {
                         mynetwork.style.width = '50%';
                         config.style.width = '30%';
-                        edgeAttr.style.width = '20%';
-                        edgeAttr.style.overflow='scroll';
+                        highlightAttr.style.width = '20%';
+                        // highlightAttr.style.overflow='scroll';
                     } else {
                         mynetwork.style.width = '80%';
                         config.style.width = '0';
-                        edgeAttr.style.width = '20%';
-                        edgeAttr.style.overflow='scroll';
+                        highlightAttr.style.width = '20%';
+                        // highlightAttr.style.overflow='scroll';
                     }
                     isAttrExpanded = !isAttrExpanded;
                 }
