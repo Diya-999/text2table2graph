@@ -216,6 +216,7 @@
                                 <option value="V1" selected>V1</option>
                                 <option value="V2">V2</option>
                                 <option value="V3">V3</option>
+                                <option value="V4">V4</option>
                             </select>
                         </div>
                     </div>
@@ -299,8 +300,8 @@
         <div id="config"></div>
     </div>
 
-    <script type="text/javascript" src="json/nodes.json"></script>
-    <script type="text/javascript" src="json/edges.json"></script>
+    <script type="text/javascript" src="json1/nodes.json"></script>
+    <script type="text/javascript" src="json1/edges.json"></script>
     <script type="text/javascript">
         edges1 = edges;
         nodes1 = nodes;
@@ -316,6 +317,12 @@
     <script type="text/javascript">
         edges3 = edges;
         nodes3 = nodes;
+    </script>
+    <script type="text/javascript" src="json4/nodes.json"></script>
+    <script type="text/javascript" src="json4/edges.json"></script>
+    <script type="text/javascript">
+        edges4 = edges;
+        nodes4 = nodes;
     </script>
     <script type="text/javascript">
         // initialize global variables.
@@ -393,6 +400,13 @@
             edgeUpdateArray: edgeUpdateArray3
         } = backUpData(nodes3, edges3);
         edges3.update(edgeUpdateArray3);
+
+        const {
+            nodesOptions: nodesOptions4,
+            nodeColors: nodeColors4,
+            edgeUpdateArray: edgeUpdateArray4
+        } = backUpData(nodes4, edges4);
+        edges4.update(edgeUpdateArray4);
 
         edges = edges1
         nodes = nodes1
