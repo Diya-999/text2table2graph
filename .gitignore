@@ -7,3 +7,5 @@ train.text
 json*/
 text2table2graph_share_file/
 *.pkl
+staging/
+demo_file/
