@@ -335,7 +335,7 @@
             <span id="highlight-text-title"></span>
             <div id="highlight-text"></div>
 
-            <span>Name Entity list:</span>
+            <span id="highlight-ner-title"></span>
             <div id="highlight-ner">
                 <div id="highlight-name"></div>
                 <div id="highlight-tag"></div>
@@ -549,6 +549,8 @@
         const highlightAttr = document.getElementById('highlight-attr');
         const highlightText = document.getElementById('highlight-text');
         const highlightTextTitle = document.getElementById('highlight-text-title');
+        const highlightNer = document.getElementById('highlight-ner');
+        const highlightNerTitle = document.getElementById('highlight-ner-title');
         const highlightName = document.getElementById('highlight-name');
         const highlightTag = document.getElementById('highlight-tag');
         const edgeHiddenProp = ['to', 'from', 'arrows', 'color', 'hiddenLabel']
@@ -986,10 +988,25 @@
                 clickEdge = obj;
                 edgeNeighbourhoodHighlight(clickEdge);
                 edgeId = clickEdge['edges'][0];
-                highlightTextTitle.innerText = 'Relation:';
-                highlightText.innerText = edges.get(edgeId)['relation'];
+                if (!edges.get(edgeId)['relation']) {
+                    highlightTextTitle.innerText = '';
+                    highlightText.innerText = '';
+                    highlightText.style.setProperty("border", "0px");
+                }else{
+                    highlightTextTitle.innerText = 'Relation:';
+                    highlightText.innerText = edges.get(edgeId)['relation'];
+                    highlightText.style.setProperty("border", "1px solid black");
+                }
+                if (edges.get(edgeId)['sim']){
+                    highlightTextTitle.innerText = 'Similarity:';
+                    highlightText.innerText = edges.get(edgeId)['sim'];
+                    highlightText.style.setProperty("border", "1px solid black");
+                }
+                
                 highlightName.innerText = '';
                 highlightTag.innerText = '';
+                highlightNer.style.setProperty("border", "0px");
+                highlightNerTitle.innerText = "";
                 if (!isAttrExpanded) {
                     var target = obj.target;
 
