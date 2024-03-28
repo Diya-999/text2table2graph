@@ -141,7 +141,16 @@
             height: 600px;
             width: 0;
             overflow: hidden;
+            background-color: #ffffff;
+            border: 1px solid lightgray;
+
             transition: width 0.3s ease;
+            z-index: 9999;
+            position: absolute;
+            right:0;
+            overflow-y: scroll;
+            padding: 0;
+            margin: 0;
         }
 
         #highlight-attr {
@@ -154,13 +163,13 @@
         #highlight-text {
             height: 300px;
             font-size: small;
-            border: 1px solid black;
+            border: 0px solid black;
             overflow-y: scroll;
         }
 
         #highlight-ner {
             height: 100px;
-            border: 1px solid black;
+            border: 0px solid black;
             font-size: small;
             overflow-y: scroll;
         }
@@ -233,7 +242,7 @@
                                     <form onsubmit="getEdgeLabelSize()" style="display: flex;">
                                         <input id="edge-label-size" placeholder="" value=""
                                             style="width: 40px;height: 35px;border-color:#a0a0a0;border-style: solid; border-width: 0.5;border-radius: 5%;margin-top: -5px;">
-                                        <input type="submit" value="Submit" class="btn btn-xs btn-primary btn-block"
+                                        <input type="submit" value="E Size" class="btn btn-xs btn-primary btn-block"
                                             style="font-size:x-small; margin-left: 5;margin-top: -3px;height:30px;">
                                     </form>
                                 </div>
@@ -241,7 +250,7 @@
                                     <form onsubmit="getNewsSimThreshold()" style="display: flex;">
                                         <input id="news-sim-threshold" placeholder="" value=""
                                             style="width: 40px;height: 35px;border-color:#a0a0a0;border-style: solid; border-width: 0.5;border-radius: 5%;margin-top: -5px;">
-                                        <input type="submit" value="Submit" class="btn btn-xs btn-primary btn-block"
+                                        <input type="submit" value="Sim Th" class="btn btn-xs btn-primary btn-block"
                                             style="font-size:x-small; margin-left: 5;margin-top: -3px;height:30px;">
                                     </form>
                                 </div>
@@ -433,7 +442,6 @@
                 edgeUpdateArray.push(allEdges[edgeId])
             }
             edges.update(edgeUpdateArray)
-            document.getElementById('edge-label-size').value = '';
         }
 
         function getNewsSimThreshold() {
@@ -464,7 +472,6 @@
                 edgeUpdateArray.push(allEdges[edgeId])
             }
             edges.update(edgeUpdateArray)
-            // document.getElementById('news-sim-threshold').value = '';
         }
 
         function backUpData(nodes, edges) {
