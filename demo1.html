@@ -979,6 +979,13 @@
             allEdges = edges.get({ returnType: "Object" });
 
             var toggleSwitch = document.querySelector('#auto-toggle-switch');
+
+            network.on('click', function (params) {
+                if (params.nodes.length === 0 && params.edges.length === 0 && params.items.length === 0) {
+                    resetHighlight();
+                    
+                }
+            });
             network.on("selectNode", neighbourhoodHighlight);
             network.on("selectEdge", function (obj) {
                 if (obj.nodes.length > 0) {
@@ -1002,7 +1009,7 @@
                     highlightText.innerText = edges.get(edgeId)['sim'];
                     highlightText.style.setProperty("border", "1px solid black");
                 }
-                
+
                 highlightName.innerText = '';
                 highlightTag.innerText = '';
                 highlightNer.style.setProperty("border", "0px");
