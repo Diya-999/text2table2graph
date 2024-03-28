@@ -232,9 +232,9 @@
                                 <div class="col-1" style="margin: -6 0 0 -35;">
                                     <select onchange="changeNetworkVersion(value);" name="NetworkVersion"
                                         id="select-network-version" style="width: 35px;">
-                                        <option value="V1" selected>V1</option>
+                                        <option value="V1">V1</option>
                                         <option value="V2">V2</option>
-                                        <option value="V3">V3</option>
+                                        <option value="V3" selected>V3</option>
                                         <option value="V4">V4</option>
                                     </select>
                                 </div>
@@ -535,10 +535,10 @@
         } = backUpData(nodes4, edges4);
         edges4.update(edgeUpdateArray4);
 
-        edges = edges1
-        nodes = nodes1
-        nodeColors = nodeColors1
-        nodesOption = nodesOptions1
+        edges = edges3
+        nodes = nodes3
+        nodeColors = nodeColors3
+        nodesOption = nodesOptions3
         const toggleButton = document.getElementById('toggleButton');
         const selectContainer = document.getElementById('selectContainer');
         selectContainer.style.display = 'none'
@@ -903,7 +903,7 @@
             // edges = new vis.DataSet([{ "from": "Aemon", "to": "Grenn", "value": 5 }, { "from": "Aemon", "to": "Samwell", "value": 31 }, { "from": "Aerys", "to": "Jaime", "value": 18 }, { "from": "Aerys", "to": "Robert", "value": 6 }, { "from": "Aerys", "to": "Tyrion", "value": 5 }, { "from": "Aerys", "to": "Tywin", "value": 8 }, { "from": "Alliser", "to": "Mance", "value": 5 }, { "from": "Amory", "to": "Oberyn", "value": 5 }, { "from": "Arya", "to": "Anguy", "value": 11 }, { "from": "Arya", "to": "Beric", "value": 23 }, { "from": "Arya", "to": "Bran", "value": 9 }, { "from": "Arya", "to": "Brynden", "value": 6 }, { "from": "Arya", "to": "Cersei", "value": 5 }, { "from": "Arya", "to": "Gendry", "value": 43 }, { "from": "Arya", "to": "Gregor", "value": 7 }, { "from": "Arya", "to": "Jaime", "value": 11 }, { "from": "Arya", "to": "Joffrey", "value": 6 }, { "from": "Arya", "to": "Jon", "value": 7 }, { "from": "Arya", "to": "Rickon", "value": 8 }, { "from": "Arya", "to": "Robert", "value": 4 }, { "from": "Arya", "to": "Roose", "value": 5 }, { "from": "Arya", "to": "Sandor", "value": 46 }, { "from": "Arya", "to": "Thoros", "value": 18 }, { "from": "Arya", "to": "Tyrion", "value": 5 }, { "from": "Balon", "to": "Loras", "value": 4 }, { "from": "Belwas", "to": "Barristan", "value": 18 }, { "from": "Belwas", "to": "Illyrio", "value": 10 }, { "from": "Beric", "to": "Anguy", "value": 4 }, { "from": "Beric", "to": "Gendry", "value": 4 }, { "from": "Beric", "to": "Thoros", "value": 21 }, { "from": "Bran", "to": "Hodor", "value": 96 }, { "from": "Bran", "to": "Jojen", "value": 46 }, { "from": "Bran", "to": "Jon", "value": 12 }, { "from": "Bran", "to": "Luwin", "value": 4 }, { "from": "Bran", "to": "Meera", "value": 54 }, { "from": "Bran", "to": "Nan", "value": 14 }, { "from": "Bran", "to": "Rickon", "value": 35 }, { "from": "Bran", "to": "Samwell", "value": 11 }, { "from": "Bran", "to": "Theon", "value": 11 }, { "from": "Brienne", "to": "Loras", "value": 7 }, { "from": "Bronn", "to": "Gregor", "value": 5 }, { "from": "Bronn", "to": "Podrick", "value": 19 }, { "from": "Brynden", "to": "Brynden", "value": 7 }, { "from": "Brynden", "to": "Lothar", "value": 4 }, { "from": "Brynden", "to": "Walder", "value": 5 }, { "from": "Catelyn", "to": "Bran", "value": 4 }, { "from": "Catelyn", "to": "Brienne", "value": 7 }, { "from": "Catelyn", "to": "Brynden", "value": 8 }, { "from": "Catelyn", "to": "Cersei", "value": 4 }, { "from": "Catelyn", "to": "Edmure", "value": 16 }]);
 
             // adding nodes and edges to the graph
-            data = { nodes: nodes1, edges: edges1 };
+            data = { nodes: nodes, edges: edges };
 
             var options = {
                 "configure": {
