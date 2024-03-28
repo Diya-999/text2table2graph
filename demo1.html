@@ -177,50 +177,78 @@
             src="https://static.wixstatic.com/media/8d2c3e_a6efe65d8c07417389a595c3cea6b2de~mv2.png/v1/fill/w_192,h_33,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/FCCA%20logo%20trans%20white.png">
     </div>
 
-    <div class="card" style="width: 100%">
+    <div class="card" style="width: 100%; font-family: Geist sans-serif;">
         <div id="select-menu" class="card-header">
             <div class="row no-gutters">
-                <div class="col-8 pb-2" style="width: 50%;">
+                <div class="col-8 pb-2">
+                    <div class="row">
+                        <div class="col-12" style="font-size:small;">
+                            <div class="row">
+                                <div class="col-2">
+                                    <span> Filter Panel:</span>
+                                    <label class="btn switch">
+                                        <input type="checkbox" id="toggleButton">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+
+                                <div class="col-3" style="margin: 0 0 0 -30;">
+                                    <span> Animation Setting:</span>
+                                    <label class="btn switch">
+                                        <input type="checkbox" id="toggleButton2">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+
+                                <div class="col-3" style="margin: 0 0 0 -80;">
+                                    <span> Edge/Node Detail:</span>
+                                    <label class="btn switch" id="auto-toggle-switch">
+                                        <input type="checkbox" id="toggleButton3">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+
+                                <div class="col-3" style="margin: 0 0 0 -80;">
+                                    <span> Show Edge Label:</span>
+                                    <label class="btn switch" id="auto-toggle-switch">
+                                        <input type="checkbox" id="toggleButton4">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+
+                                <div class="col-1" style="margin: 0 0 0 -85;">
+                                    <span>version:</span>
+                                </div>
+
+                                <div class="col-1" style="margin: -6 0 0 -35;">
+                                    <select onchange="changeNetworkVersion(value);" name="NetworkVersion"
+                                        id="select-network-version" style="width: 35px;">
+                                        <option value="V1" selected>V1</option>
+                                        <option value="V2">V2</option>
+                                        <option value="V3">V3</option>
+                                        <option value="V4">V4</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-3 pb-2" style="margin: -5 0 0 0;">
                     <select aria-label="Default select example" onchange="selectNode([value]);" id="select-node"
                         placeholder="Select node...">
                         <!-- <option selected>Select a Node by ID</option> -->
                         <option value="">Select a Node by ID...</option>
                     </select>
                 </div>
-                <div class="col-4 pb-2" style="width: 50%;">
+                <div class="col-1 pb-2" style="margin: -2 0 0 0;">
                     <div class="row">
-                        <div class="col-3">
-                            <button type="button" class="btn btn-xs btn-primary btn-block" style="font-size:x-small;"
-                                onclick="neighbourhoodHighlight({nodes: []});">Reset Selection</button>
-                        </div>
-
-                        <div class="col-4">
-                            <span> filter:</span>
-                            <label class="btn switch">
-                                <input type="checkbox" id="toggleButton">
-                                <span class="slider round"></span>
-                            </label>
-                            <label class="btn switch">
-                                <input type="checkbox" id="toggleButton2">
-                                <span class="slider round"></span>
-                            </label>
-                            <label class="btn switch" id="auto-toggle-switch">
-                                <input type="checkbox" id="toggleButton3">
-                                <span class="slider round"></span>
-                            </label>
-                        </div>
-                        <div class="col-4">
-                            <!-- <span style="font-size:small;">Network version:</span> -->
-                            <select onchange="changeNetworkVersion(value);" name="NetworkVersion"
-                                id="select-network-version" style="width: 30%;">
-                                <option value="V1" selected>V1</option>
-                                <option value="V2">V2</option>
-                                <option value="V3">V3</option>
-                                <option value="V4">V4</option>
-                            </select>
-                        </div>
+                        <button type="button" class="btn btn-xs btn-primary btn-block" style="font-size:x-small;"
+                            onclick="neighbourhoodHighlight({nodes: []});">Reset Selection</button>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
@@ -489,6 +517,21 @@
                 }
             }
             isAttrExpanded = !isAttrExpanded;
+        });
+
+        const toggleButton4 = document.getElementById('toggleButton4');
+        toggleButton4.addEventListener('click', function () {
+            edgeUpdateArray = [];
+            for (let edgeId in allEdges) {
+                if (isEdgelabel) {
+                    allEdges[edgeId].label = " ";
+                } else {
+                    allEdges[edgeId].label = allEdges[edgeId].label_ori;
+                }
+                edgeUpdateArray.push(allEdges[edgeId])
+            }
+            edges.update(edgeUpdateArray);
+            isEdgelabel = !isEdgelabel;
         });
 
         let nodeControl = new TomSelect('#select-node', {
