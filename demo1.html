@@ -229,6 +229,14 @@
                                         <option value="V4">V4</option>
                                     </select>
                                 </div>
+                                <div class="col-1" style="font-size:small; margin-left: -30px;">
+                                    <form onsubmit="getEdgeLabelSize()" style="display: flex;">
+                                        <input id="edge-label-size" placeholder="" value=""
+                                            style="width: 40px;height: 35px;border-color:#a0a0a0;border-style: solid; border-width: 0.5;border-radius: 5%;margin-top: -5px;">
+                                        <input type="submit" value="Submit" class="btn btn-xs btn-primary btn-block"
+                                            style="font-size:x-small; margin-left: 5;margin-top: -3px;height:30px;">
+                                    </form>
+                                </div>
                             </div>
                         </div>
 
@@ -378,6 +386,45 @@
             property: '',
             value: []
         };
+        function getEdgeLabelSize() {
+            // Prevent default form submission
+            event.preventDefault();
+
+            // Get the input value
+            edgeLabelSize = document.getElementById('edge-label-size').value;
+
+            // Validate input
+            if (!edgeLabelSize) {
+                alert('Please enter a size');
+                return;
+            }
+
+            if (isNaN(edgeLabelSize)) {
+                alert('Size must be a number');
+                return;
+            }
+            allEdges = edges.get({ returnType: "Object" });
+            const edgeUpdateArray = [];
+            for (let edgeId in allEdges) {
+
+                if (allEdges[edgeId].hasOwnProperty('relation') && allEdges[edgeId].relation.length < edgeLabelSize) {
+                    if (!isEdgelabel) {
+                        allEdges[edgeId].label = ' ';
+                        allEdges[edgeId].label_ori = allEdges[edgeId].relation;
+                    } else {
+                        allEdges[edgeId].label = allEdges[edgeId].relation;
+                        allEdges[edgeId].label_ori = allEdges[edgeId].relation;
+                    }
+                } else {
+                    allEdges[edgeId].label = ' ';
+                    allEdges[edgeId].label_ori = ' ';
+                };
+                edgeUpdateArray.push(allEdges[edgeId])
+            }
+            edges.update(edgeUpdateArray)
+            document.getElementById('edge-label-size').value = '';
+        }
+
 
         function backUpData(nodes, edges) {
             const nodesOptions = nodes.map(function (node) {
@@ -396,8 +443,10 @@
             allEdges = edges.get({ returnType: "Object" });
             const edgeUpdateArray = [];
             for (let edgeId in allEdges) {
-                if (allEdges[edgeId].hasOwnProperty('relation') && allEdges[edgeId].relation.length < 30) {
-                    allEdges[edgeId].label = allEdges[edgeId].relation;
+                if (allEdges[edgeId].hasOwnProperty('relation') && allEdges[edgeId].relation.length < edgeLabelSize) {
+                    allEdges[edgeId].label = ' ';
+                    allEdges[edgeId].label_ori = allEdges[edgeId].relation; // laurence 
+                };
                 };
                 edgeUpdateArray.push(allEdges[edgeId])
             }
