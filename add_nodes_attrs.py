@@ -22,6 +22,7 @@ if __name__ == '__main__':
     parser.add_argument('--input_attr_path', type=str,  default='')
     parser.add_argument('--add_cols', type=str, nargs='+', default=[])
     parser.add_argument('--add_mode', type=str, default='one-to-one')  #one-to-many or one-to-one
+    parser.add_argument('--unique_attr_df', type=str, default=0) 
     parser.add_argument('--output_path', type=str, default='./news_v2.pkl')
 
     args = parser.parse_args()
@@ -45,9 +46,12 @@ if __name__ == '__main__':
         else:
             add_cols = list(df_attr.columns) - ['node']
 
+        if args.unique_attr_df:
+            df_attr = df_attr.drop_duplicates().reset_index(drop=True)
+
         if args.add_mode == 'one-to-many':
             agg_method = {col_name: to_list for col_name in add_cols}
-            df_attr = df_attr.groupby('node').agg(agg_method).reset_index()
+            df_attr = df_attr.groupby('node').agg(agg_method)
 
         merge_df = df.merge(df_attr, on='node', how='left')
         df['attr'] = merge_df.apply(add_attr, args=(add_cols,), axis=1)

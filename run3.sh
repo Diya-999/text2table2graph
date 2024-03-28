@@ -37,7 +37,7 @@ python gen_node_edge.py --input_path ./staging/tmp_t3/news2news.pkl --output_pat
 ### add_nodes_attrs
 python add_nodes_attrs.py --input_path ./staging/tmp_t3/news_v1.pkl --add_attr_maps '[{"attr_name":"shape","attr_val":"triangle"},{"attr_name":"color","attr_val":"#e8792e"}]' --input_attr_path ./staging/tmp_t3/node_attr_summary.pkl --add_cols summary --output_path ./staging/tmp_t3/news_v2.pkl
 
-python add_nodes_attrs.py --input_path ./staging/tmp_t3/news_v2.pkl --input_attr_path ./staging/tmp_t3/node_attr_news_ner.pkl --add_cols name tag --output_path ./staging/tmp_t3/news_v2.pkl --add_mode one-to-many
+python add_nodes_attrs.py --input_path ./staging/tmp_t3/news_v2.pkl --input_attr_path ./staging/tmp_t3/node_attr_news_ner.pkl --add_cols name tag --output_path ./staging/tmp_t3/news_v2.pkl --add_mode one-to-many --unique_attr_df 1
 
 python add_nodes_attrs.py --input_path ./staging/tmp_t3/entity_v1.pkl --add_attr_maps '[{"attr_name":"shape","attr_val":"dot"}]' --output_path ./staging/tmp_t3/entity_v2.pkl
 
