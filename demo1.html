@@ -237,6 +237,14 @@
                                             style="font-size:x-small; margin-left: 5;margin-top: -3px;height:30px;">
                                     </form>
                                 </div>
+                                <div class="col-1" style="font-size:small; margin-left: 30px;">
+                                    <form onsubmit="getNewsSimThreshold()" style="display: flex;">
+                                        <input id="news-sim-threshold" placeholder="" value=""
+                                            style="width: 40px;height: 35px;border-color:#a0a0a0;border-style: solid; border-width: 0.5;border-radius: 5%;margin-top: -5px;">
+                                        <input type="submit" value="Submit" class="btn btn-xs btn-primary btn-block"
+                                            style="font-size:x-small; margin-left: 5;margin-top: -3px;height:30px;">
+                                    </form>
+                                </div>
                             </div>
                         </div>
 
@@ -376,6 +384,9 @@
         var options, data;
         var highlightActive
         var filterActive
+        var isEdgelabel = false;
+        var edgeLabelSize = 30;
+        var newsSimThreshold = 0;
         var filter = {
             item: '',
             property: '',
@@ -425,6 +436,36 @@
             document.getElementById('edge-label-size').value = '';
         }
 
+        function getNewsSimThreshold() {
+            // Prevent default form submission
+            event.preventDefault();
+
+            // Get the input value
+            newsSimThreshold = document.getElementById('news-sim-threshold').value;
+
+            // Validate input
+            if (!newsSimThreshold) {
+                alert('Please enter a threshold');
+                return;
+            }
+
+            if (isNaN(newsSimThreshold)) {
+                alert('Threshold must be a number');
+                return;
+            }
+            allEdges = edges.get({ returnType: "Object" });
+            const edgeUpdateArray = [];
+            for (let edgeId in allEdges) {
+                if (allEdges[edgeId].hasOwnProperty('sim') && allEdges[edgeId].sim > newsSimThreshold) {
+                    allEdges[edgeId].hidden = false;
+                } else if (allEdges[edgeId].hasOwnProperty('sim') && allEdges[edgeId].sim <= newsSimThreshold) {
+                    allEdges[edgeId].hidden = true;
+                };
+                edgeUpdateArray.push(allEdges[edgeId])
+            }
+            edges.update(edgeUpdateArray)
+            // document.getElementById('news-sim-threshold').value = '';
+        }
 
         function backUpData(nodes, edges) {
             const nodesOptions = nodes.map(function (node) {
@@ -447,6 +488,8 @@
                     allEdges[edgeId].label = ' ';
                     allEdges[edgeId].label_ori = allEdges[edgeId].relation; // laurence 
                 };
+                if (allEdges[edgeId].hasOwnProperty('sim') && allEdges[edgeId].sim <= newsSimThreshold) {
+                    allEdges[edgeId].hidden = true
                 };
                 edgeUpdateArray.push(allEdges[edgeId])
             }

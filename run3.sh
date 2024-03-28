@@ -12,7 +12,7 @@ python pkl2df.py --input_folder ./staging/stg_e/dj_news/rel_on_ner/ --output_pat
 
 python pkl2df.py --input_folder ./staging/stg_e/dj_news/rel_on_ner/ --output_path ./staging/tmp_t3/news2entity_2.pkl --extract_column_list "entity 2" source --map_cols '{"entity 2":"node1", "source":"node2"}'
 
-python pkl2df.py --input_folder ./staging/stg_e/dj_news/news_sum_sim/ --output_path ./staging/tmp_t3/news2news.pkl --extract_column_list node1 node2 sim --query_str 'sim > 0.75' --is_value_str 0
+python pkl2df.py --input_folder ./staging/stg_e/dj_news/news_sum_sim/ --output_path ./staging/tmp_t3/news2news.pkl --extract_column_list node1 node2 sim --is_value_str 0 #--query_str 'sim > 0.75' 
 
 ### get sum
 python pkl2df.py --input_folder ./staging/stg_e/dj_news/sum/ --output_path ./staging/tmp_t3/node_attr_summary.pkl  --extract_column_list text source --map_cols '{"text": "summary", "source":"node"}'
