@@ -956,7 +956,8 @@
                 "interaction": {
                     "dragNodes": true,
                     "hideEdgesOnDrag": false,
-                    "hideNodesOnDrag": false
+                    "hideNodesOnDrag": false,
+                    "selectConnectedEdges": false
                 },
                 "physics": {
                     "enabled": true,
@@ -988,10 +989,6 @@
             });
             network.on("selectNode", neighbourhoodHighlight);
             network.on("selectEdge", function (obj) {
-                if (obj.nodes.length > 0) {
-                    return
-                }
-
                 clickEdge = obj;
                 edgeNeighbourhoodHighlight(clickEdge);
                 edgeId = clickEdge['edges'][0];
