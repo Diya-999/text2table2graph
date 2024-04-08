@@ -387,6 +387,7 @@
         var allNodes;
         var allEdges;
         var nodeColors;
+        var edgeColors;
         var originalNodes;
         var network;
         var container;
@@ -490,6 +491,7 @@
 
             allEdges = edges.get({ returnType: "Object" });
             const edgeUpdateArray = [];
+            const edgeColors = {};
             for (let edgeId in allEdges) {
                 if (allEdges[edgeId].hasOwnProperty('relation') && allEdges[edgeId].relation.length < edgeLabelSize) {
                     allEdges[edgeId].label = ' ';
@@ -498,11 +500,21 @@
                 if (allEdges[edgeId].hasOwnProperty('sim') && allEdges[edgeId].sim <= newsSimThreshold) {
                     allEdges[edgeId].hidden = true
                 };
+
+                if (allEdges[edgeId].edge_type === "entity2entity" && allEdges[edgeId].hasOwnProperty('sim')){
+                    allEdges[edgeId].color = '#49bf6c'
+                }else if(allEdges[edgeId].edge_type === "news2news" && allEdges[edgeId].hasOwnProperty('sim')){
+                    allEdges[edgeId].color = '#e8792e'
+                }else{
+                    allEdges[edgeId].color = '#97c2fc'
+                }
+                edgeColors[edgeId] = allEdges[edgeId].color;
                 edgeUpdateArray.push(allEdges[edgeId])
             }
             return {
                 nodesOptions: nodesOptions,
                 nodeColors: nodeColors,
+                edgeColors:edgeColors,
                 edgeUpdateArray: edgeUpdateArray
             };
         }
@@ -510,6 +522,7 @@
         const {
             nodesOptions: nodesOptions1,
             nodeColors: nodeColors1,
+            edgeColors: edgeColors1,
             edgeUpdateArray: edgeUpdateArray1
         } = backUpData(nodes1, edges1);
         edges1.update(edgeUpdateArray1);
@@ -517,6 +530,7 @@
         const {
             nodesOptions: nodesOptions2,
             nodeColors: nodeColors2,
+            edgeColors: edgeColors2,
             edgeUpdateArray: edgeUpdateArray2
         } = backUpData(nodes2, edges2);
         edges2.update(edgeUpdateArray2);
@@ -524,6 +538,7 @@
         const {
             nodesOptions: nodesOptions3,
             nodeColors: nodeColors3,
+            edgeColors: edgeColors3,
             edgeUpdateArray: edgeUpdateArray3
         } = backUpData(nodes3, edges3);
         edges3.update(edgeUpdateArray3);
@@ -531,6 +546,7 @@
         const {
             nodesOptions: nodesOptions4,
             nodeColors: nodeColors4,
+            edgeColors: edgeColors4,
             edgeUpdateArray: edgeUpdateArray4
         } = backUpData(nodes4, edges4);
         edges4.update(edgeUpdateArray4);
@@ -538,6 +554,7 @@
         edges = edges3
         nodes = nodes3
         nodeColors = nodeColors3
+        edgeColors = edgeColors3
         nodesOption = nodesOptions3
         const toggleButton = document.getElementById('toggleButton');
         const selectContainer = document.getElementById('selectContainer');
