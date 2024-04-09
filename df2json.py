@@ -22,16 +22,16 @@ def build_network(node_df, edge_df):
             id = row['node']
         if row['node_type'] == 'news':
             label = add_newline(str(row['node']),'/',2)
-            got_net.add_node(id, label=label, node_type=row['node_type'], title=row['node'],size=16, **row['attr'])
+            got_net.add_node(str(id), label=label, node_type=row['node_type'], title=row['node'],size=16, **row['attr'])
 
         elif row['node_type'] == 'entity':
             label = add_newline(str(row['node']))
-            got_net.add_node(id, label=label, node_type=row['node_type'], title=row['node'],size=16, **row['attr'])
+            got_net.add_node(str(id), label=label, node_type=row['node_type'], title=row['node'],size=16, **row['attr'])
 
     for index, row in edge_df.iterrows():
         if args.whether_use_node_id:
-            inode1_id = row['node1_id']
-            inode2_id = row['node2_id']
+            inode1_id = str(row['node1_id'])
+            inode2_id = str(row['node2_id'])
         else:
             inode1_id = row['node1']
             inode2_id = row['node2']
