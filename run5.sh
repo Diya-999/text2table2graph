@@ -39,11 +39,11 @@ python gen_entity2entity_sim.py --news2entity_path ./staging/tmp_t5/news2entity_
 python gen_node_edge.py --input_path ./staging/tmp_t5/entity2entity_sim.pkl --output_path ./staging/tmp_t5/entity2entity_sim_v1.pkl --type edge --edge_extract_cols node1 node2 sim edge_type node1_id node2_id --input_node1_path ./staging/tmp_t5/entity_v1.pkl --input_node1_merge_cols node source --input_df_node1_merge_cols node1 node1_source --input_node2_path ./staging/tmp_t5/entity_v1.pkl  --input_node2_merge_cols node source  --input_df_node2_merge_cols node2 node2_source
 
 ### add_nodes_attrs
-python add_nodes_attrs.py --input_path ./staging/tmp_t5/news_v1.pkl --add_attr_maps '[{"attr_name":"shape","attr_val":"triangle"},{"attr_name":"color","attr_val":"#e8792e"}]' --input_attr_path ./staging/tmp_t5/node_attr_summary.pkl --add_cols summary --output_path ./staging/tmp_t5/news_v2.pkl
+python add_nodes_attrs.py --input_path ./staging/tmp_t5/news_v1.pkl --add_attr_maps '[{"attr_name":"shape","attr_val":"image"},{"attr_name":"image","attr_val":"news.png"},{"attr_name":"color","attr_val":"#e8792e"}]' --input_attr_path ./staging/tmp_t5/node_attr_summary.pkl --add_cols summary --output_path ./staging/tmp_t5/news_v2.pkl
 
 python add_nodes_attrs.py --input_path ./staging/tmp_t5/news_v2.pkl --input_attr_path ./staging/tmp_t5/node_attr_news_ner.pkl --add_cols name tag --output_path ./staging/tmp_t5/news_v2.pkl --add_mode one-to-many --unique_attr_df 1
 
-python add_nodes_attrs.py --input_path ./staging/tmp_t5/entity_v1.pkl --add_attr_maps '[{"attr_name":"shape","attr_val":"dot"}]' --output_path ./staging/tmp_t5/entity_v2.pkl
+python add_nodes_attrs.py --input_path ./staging/tmp_t5/entity_v1.pkl --add_attr_maps '[{"attr_name":"shape","attr_val":"circularImage"},{"attr_name":"image","attr_val":"entity.png"}]' --output_path ./staging/tmp_t5/entity_v2.pkl
 
 ### add_edges_attrs
 python add_edges_attrs.py --input_path ./staging/tmp_t5/entity2entity_v1_with_id.pkl --input_attr_path ./staging/tmp_t5/entity2entity_v1_with_id.pkl --add_cols relation --output_path ./staging/tmp_t5/entity2entity_v2.pkl

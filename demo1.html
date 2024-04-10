@@ -540,7 +540,7 @@
             const nodeColors = {};
             allNodes = nodes.get({ returnType: "Object" });
             for (nodeId in allNodes) {
-                if (allNodes[nodeId].hasOwnProperty('shape') && allNodes[nodeId].shape === "triangle") {
+                if (allNodes[nodeId].hasOwnProperty('shape') && allNodes[nodeId].shape === "image") {
                     allNodes[nodeId].color = '#e8792e'
                 }
                 nodeColors[nodeId] = allNodes[nodeId].color;

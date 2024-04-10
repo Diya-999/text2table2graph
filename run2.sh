@@ -25,11 +25,11 @@ python gen_node_edge.py --input_path ./staging/tmp_t2/entity_1.pkl ./staging/tmp
 python gen_node_edge.py --input_path ./staging/tmp_t2/news2entity_1.pkl ./staging/tmp_t2/news2entity_2.pkl  --output_path ./staging/tmp_t2/news2entity_v1.pkl --type edge --unique_cols node1 node2
 
 ### add_nodes_attrs
-python add_nodes_attrs.py --input_path ./staging/tmp_t2/news_v1.pkl --add_attr_maps '[{"attr_name":"shape","attr_val":"triangle"},{"attr_name":"color","attr_val":"#e8792e"}]' --input_attr_path ./staging/tmp_t2/node_attr_summary.pkl --add_cols summary --output_path ./staging/tmp_t2/news_v2.pkl
+python add_nodes_attrs.py --input_path ./staging/tmp_t2/news_v1.pkl --add_attr_maps '[{"attr_name":"shape","attr_val":"image"},{"attr_name":"image","attr_val":"news.png"},{"attr_name":"color","attr_val":"#e8792e"}]' --input_attr_path ./staging/tmp_t2/node_attr_summary.pkl --add_cols summary --output_path ./staging/tmp_t2/news_v2.pkl
 
 python add_nodes_attrs.py --input_path ./staging/tmp_t2/news_v2.pkl --input_attr_path ./staging/tmp_t2/node_attr_news_ner.pkl --add_cols name tag --output_path ./staging/tmp_t2/news_v2.pkl --add_mode one-to-many --unique_attr_df 1
 
-python add_nodes_attrs.py --input_path ./staging/tmp_t2/entity_v1.pkl --add_attr_maps '[{"attr_name":"shape","attr_val":"dot"}]' --output_path ./staging/tmp_t2/entity_v2.pkl
+python add_nodes_attrs.py --input_path ./staging/tmp_t2/entity_v1.pkl --add_attr_maps '[{"attr_name":"shape","attr_val":"circularImage"},{"attr_name":"image","attr_val":"entity.png"}]' --output_path ./staging/tmp_t2/entity_v2.pkl
 
 ### add_edges_attrs
 python add_edges_attrs.py --input_path ./staging/tmp_t2/news2entity_v1.pkl --add_attr_maps '[{"attr_name":"relation","attr_val":"has"}]' --output_path ./staging/tmp_t2/news2entity_v2.pkl
