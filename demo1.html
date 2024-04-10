@@ -259,8 +259,15 @@
 
                     </div>
                 </div>
-
-                <div class="col-3 pb-2" style="margin: -5 0 0 0;">
+                <div class="col-1" style="font-size:small; margin-left: -30px;">
+                    <form onsubmit="getEntitySimThreshold()" style="display: flex;">
+                        <input id="entity-sim-threshold" placeholder="" value=""
+                            style="width: 40px;height: 35px;border-color:#a0a0a0;border-style: solid; border-width: 0.5;border-radius: 5%;margin-top: -5px;">
+                        <input type="submit" value="E Sim Th" class="btn btn-xs btn-primary btn-block"
+                            style="font-size:x-small; margin-left: 5;margin-top: -3px;height:30px;">
+                    </form>
+                </div>
+                <div class="col-2 pb-2" style="margin: -5 0 0 0;">
                     <select aria-label="Default select example" onchange="selectNode([value]);" id="select-node"
                         placeholder="Select node...">
                         <!-- <option selected>Select a Node by ID</option> -->
@@ -397,6 +404,7 @@
         var isEdgelabel = false;
         var edgeLabelSize = 30;
         var newsSimThreshold = 0;
+        var entitySimThreshold = 0.9;
         var filter = {
             item: '',
             property: '',
@@ -407,6 +415,11 @@
             property: '',
             value: []
         };
+
+        document.getElementById('entity-sim-threshold').value = entitySimThreshold
+        document.getElementById('news-sim-threshold').value = newsSimThreshold
+        document.getElementById('edge-label-size').value = edgeLabelSize
+
         function getEdgeLabelSize() {
             // Prevent default form submission
             event.preventDefault();
@@ -465,9 +478,39 @@
             allEdges = edges.get({ returnType: "Object" });
             const edgeUpdateArray = [];
             for (let edgeId in allEdges) {
-                if (allEdges[edgeId].hasOwnProperty('sim') && allEdges[edgeId].sim > newsSimThreshold) {
+                if (allEdges[edgeId].edge_type === "news2news" && allEdges[edgeId].hasOwnProperty('sim') && allEdges[edgeId].sim > newsSimThreshold) {
                     allEdges[edgeId].hidden = false;
-                } else if (allEdges[edgeId].hasOwnProperty('sim') && allEdges[edgeId].sim <= newsSimThreshold) {
+                } else if (allEdges[edgeId].edge_type === "news2news" && allEdges[edgeId].hasOwnProperty('sim') && allEdges[edgeId].sim <= newsSimThreshold) {
+                    allEdges[edgeId].hidden = true;
+                };
+                edgeUpdateArray.push(allEdges[edgeId])
+            }
+            edges.update(edgeUpdateArray)
+        }
+
+        function getEntitySimThreshold() {
+            // Prevent default form submission
+            event.preventDefault();
+
+            // Get the input value
+            entitySimThreshold = document.getElementById('entity-sim-threshold').value;
+
+            // Validate input
+            if (!entitySimThreshold) {
+                alert('Please enter a threshold');
+                return;
+            }
+
+            if (isNaN(entitySimThreshold)) {
+                alert('Threshold must be a number');
+                return;
+            }
+            allEdges = edges.get({ returnType: "Object" });
+            const edgeUpdateArray = [];
+            for (let edgeId in allEdges) {
+                if (allEdges[edgeId].edge_type === "entity2entity" && allEdges[edgeId].hasOwnProperty('sim') && allEdges[edgeId].sim > entitySimThreshold) {
+                    allEdges[edgeId].hidden = false;
+                } else if (allEdges[edgeId].edge_type === "entity2entity" && allEdges[edgeId].hasOwnProperty('sim') && allEdges[edgeId].sim <= entitySimThreshold) {
                     allEdges[edgeId].hidden = true;
                 };
                 edgeUpdateArray.push(allEdges[edgeId])
@@ -497,15 +540,18 @@
                     allEdges[edgeId].label = ' ';
                     allEdges[edgeId].label_ori = allEdges[edgeId].relation; // laurence 
                 };
-                if (allEdges[edgeId].hasOwnProperty('sim') && allEdges[edgeId].sim <= newsSimThreshold) {
+                if (allEdges[edgeId].edge_type === "news2news" && allEdges[edgeId].hasOwnProperty('sim') && allEdges[edgeId].sim <= newsSimThreshold) {
+                    allEdges[edgeId].hidden = true
+                };
+                if (allEdges[edgeId].edge_type === "entity2entity" && allEdges[edgeId].hasOwnProperty('sim') && allEdges[edgeId].sim <= entitySimThreshold) {
                     allEdges[edgeId].hidden = true
                 };
 
-                if (allEdges[edgeId].edge_type === "entity2entity" && allEdges[edgeId].hasOwnProperty('sim')){
+                if (allEdges[edgeId].edge_type === "entity2entity" && allEdges[edgeId].hasOwnProperty('sim')) {
                     allEdges[edgeId].color = '#49bf6c'
-                }else if(allEdges[edgeId].edge_type === "news2news" && allEdges[edgeId].hasOwnProperty('sim')){
+                } else if (allEdges[edgeId].edge_type === "news2news" && allEdges[edgeId].hasOwnProperty('sim')) {
                     allEdges[edgeId].color = '#e8792e'
-                }else{
+                } else {
                     allEdges[edgeId].color = '#97c2fc'
                 }
                 edgeColors[edgeId] = allEdges[edgeId].color;
@@ -514,7 +560,7 @@
             return {
                 nodesOptions: nodesOptions,
                 nodeColors: nodeColors,
-                edgeColors:edgeColors,
+                edgeColors: edgeColors,
                 edgeUpdateArray: edgeUpdateArray
             };
         }
