@@ -147,7 +147,7 @@
             transition: width 0.3s ease;
             z-index: 9999;
             position: absolute;
-            right:0;
+            right: 0;
             overflow-y: scroll;
             padding: 0;
             margin: 0;
@@ -236,6 +236,8 @@
                                         <option value="V2">V2</option>
                                         <option value="V3" selected>V3</option>
                                         <option value="V4">V4</option>
+                                        <option value="V5">V5</option>
+                                        <option value="V6">V6</option>
                                     </select>
                                 </div>
                                 <div class="col-1" style="font-size:small; margin-left: -30px;">
@@ -383,6 +385,18 @@
     <script type="text/javascript">
         edges4 = edges;
         nodes4 = nodes;
+    </script>
+    <script type="text/javascript" src="json5/nodes.json"></script>
+    <script type="text/javascript" src="json5/edges.json"></script>
+    <script type="text/javascript">
+        edges5 = edges;
+        nodes5 = nodes;
+    </script>
+    <script type="text/javascript" src="json6/nodes.json"></script>
+    <script type="text/javascript" src="json6/edges.json"></script>
+    <script type="text/javascript">
+        edges6 = edges;
+        nodes6 = nodes;
     </script>
     <script type="text/javascript">
         // initialize global variables.
@@ -596,6 +610,22 @@
             edgeUpdateArray: edgeUpdateArray4
         } = backUpData(nodes4, edges4);
         edges4.update(edgeUpdateArray4);
+
+        const {
+            nodesOptions: nodesOptions5,
+            nodeColors: nodeColors5,
+            edgeColors: edgeColors5,
+            edgeUpdateArray: edgeUpdateArray5
+        } = backUpData(nodes5, edges5);
+        edges5.update(edgeUpdateArray5);
+
+        const {
+            nodesOptions: nodesOptions6,
+            nodeColors: nodeColors6,
+            edgeColors: edgeColors6,
+            edgeUpdateArray: edgeUpdateArray6
+        } = backUpData(nodes6, edges6);
+        edges6.update(edgeUpdateArray6);
 
         edges = edges3
         nodes = nodes3
