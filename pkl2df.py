@@ -35,5 +35,7 @@ if __name__ == '__main__':
 
     if args.query_str:
         df = df.query(args.query_str).reset_index(drop=True)
-
+    dir_path = os.path.dirname(args.output_path)
+    if not os.path.exists(dir_path):
+        os.makedirs(dir_path)
     df.to_pickle(args.output_path)
