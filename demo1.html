@@ -700,7 +700,8 @@
                 field: "text",
                 direction: "asc"
             },
-            options: nodesOption
+            options: nodesOption,
+            maxOptions: null
         });
 
         let networkVersionControl = new TomSelect('#select-network-version', {
@@ -710,6 +711,7 @@
                 direction: "asc"
             },
             controlInput: null,
+            maxOptions: null
         });
 
         // explicitly using onItemAdd and this function as we need to save multiple values
