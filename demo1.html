@@ -715,9 +715,17 @@
         });
 
         // explicitly using onItemAdd and this function as we need to save multiple values
-        let updateValueFilter = function () {
+        let addValueFilter = function () {
             return function () {
                 filter['value'].push(arguments[0])
+            }
+        }
+        let removeValueFilter = function () {
+            return function () {
+                var index = filter['value'].indexOf(arguments[0]); // Find the index of the specified element
+                if (index !== -1) {
+                    filter['value'].splice(index, 1); // Remove one element at the specified index
+                }
             }
         }
 
@@ -731,7 +739,8 @@
                 field: "text",
                 direction: "asc"
             },
-            onItemAdd: updateValueFilter()
+            onItemAdd: addValueFilter(),
+            onItemRemove: removeValueFilter(),
         });
 
         let addValues = function () {
@@ -873,11 +882,20 @@
 
         ///////
         // explicitly using onItemAdd and this function as we need to save multiple values
-        let updateValueFilter2 = function () {
+        let addValueFilter2 = function () {
             return function () {
                 filter2['value'].push(arguments[0])
             }
         }
+        let removeValueFilter2 = function () {
+            return function () {
+                var index = filter2['value'].indexOf(arguments[0]); // Find the index of the specified element
+                if (index !== -1) {
+                    filter2['value'].splice(index, 1); // Remove one element at the specified index
+                }
+            }
+        }
+
         let valueControl2 = new TomSelect("#select-value-2", {
             maxItems: null,
             valueField: 'id',
@@ -888,7 +906,8 @@
                 field: "text",
                 direction: "asc"
             },
-            onItemAdd: updateValueFilter2()
+            onItemAdd: addValueFilter2(),
+            onItemRemove: removeValueFilter2()
         });
 
         let addValues2 = function () {
