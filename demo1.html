@@ -308,7 +308,7 @@
                 </div>
                 <div class="col-2 pb-2">
                     <button type="button" class="btn btn-xs btn-primary btn-block" style="font-size:x-small;"
-                        onclick="clearFilter_1_and_2(true)">Reset Selection</button>
+                        onclick="resetFilterSelection(true)">Reset Selection</button>
                 </div>
             </div>
         </div>
@@ -801,7 +801,6 @@
             }
             if (reset) {
                 itemControl.clear();
-                filterHighlightNodesEdges(false)
             }
         }
 
@@ -830,8 +829,12 @@
             if (reset) {
                 itemControl.clear();
                 itemControl2.clear();
-                filterHighlightNodesEdges(false);
             }
+        }
+
+        function resetFilterSelection(reset) {
+            clearFilter_1_and_2(reset);
+            resetHighlight()
         }
 
         function updateFilter(value, key, menuId) {
@@ -968,7 +971,6 @@
             }
             if (reset) {
                 itemControl2.clear();
-                filterHighlightNodesEdges(false)
             }
         };
 
