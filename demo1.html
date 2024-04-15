@@ -190,86 +190,78 @@
         <div id="select-menu" class="card-header">
             <div class="row no-gutters">
                 <div class="col-8 pb-2">
-                    <div class="row">
-                        <div class="col-12" style="font-size:small;">
-                            <div class="row">
-                                <div class="col-2">
-                                    <span> Filter Panel:</span>
-                                    <label class="btn switch">
-                                        <input type="checkbox" id="toggleButton">
-                                        <span class="slider round"></span>
-                                    </label>
-                                </div>
+                    <div class="col-12" style="font-size:small;">
+                        <div class="row">
+                            <div class="col-2">
+                                <span> Filter Panel:</span>
+                                <label class="btn switch">
+                                    <input type="checkbox" id="toggleButton">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
 
-                                <div class="col-3" style="margin: 0 0 0 -30;">
-                                    <span> Animation Setting:</span>
-                                    <label class="btn switch">
-                                        <input type="checkbox" id="toggleButton2">
-                                        <span class="slider round"></span>
-                                    </label>
-                                </div>
+                            <div class="col-3" style="margin: 0 0 0 -30;">
+                                <span> Animation Setting:</span>
+                                <label class="btn switch">
+                                    <input type="checkbox" id="toggleButton2">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
 
-                                <div class="col-3" style="margin: 0 0 0 -80;">
-                                    <span> Edge/Node Detail:</span>
-                                    <label class="btn switch" id="auto-toggle-switch">
-                                        <input type="checkbox" id="toggleButton3">
-                                        <span class="slider round"></span>
-                                    </label>
-                                </div>
+                            <div class="col-3" style="margin: 0 0 0 -80;">
+                                <span> Show Edge Label:</span>
+                                <label class="btn switch">
+                                    <input type="checkbox" id="toggleButton4">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
 
-                                <div class="col-3" style="margin: 0 0 0 -80;">
-                                    <span> Show Edge Label:</span>
-                                    <label class="btn switch">
-                                        <input type="checkbox" id="toggleButton4">
-                                        <span class="slider round"></span>
-                                    </label>
-                                </div>
+                            <div class="col-1" style="margin: 0 0 0 -85;">
+                                <span>version:</span>
+                            </div>
 
-                                <div class="col-1" style="margin: 0 0 0 -85;">
-                                    <span>version:</span>
-                                </div>
+                            <div class="col-1" style="margin: -6 0 0 -35;">
+                                <select onchange="changeNetworkVersion(value);" name="NetworkVersion"
+                                    id="select-network-version" style="width: 35px;">
+                                    <option value="V1">V1</option>
+                                    <option value="V2">V2</option>
+                                    <option value="V3" selected>V3</option>
+                                    <option value="V4">V4</option>
+                                    <option value="V5">V5</option>
+                                    <option value="V6">V6</option>
+                                </select>
+                            </div>
+                            <div class="col-1" style="font-size:small; margin-left: -30px;">
+                                <form onsubmit="getEdgeLabelSize()" style="display: flex;">
+                                    <input id="edge-label-size" placeholder="" value=""
+                                        style="width: 40px;height: 35px;border-color:#a0a0a0;border-style: solid; border-width: 0.5;border-radius: 5%;margin-top: -5px;">
+                                    <input type="submit" value="E Size" class="btn btn-xs btn-primary btn-block"
+                                        style="font-size:x-small; margin-left: 5;margin-top: -3px;height:30px;">
+                                </form>
+                            </div>
+                            <div class="col-1" style="font-size:small; margin-left: 30px;">
+                                <form onsubmit="getNewsSimThreshold()" style="display: flex;">
+                                    <input id="news-sim-threshold" placeholder="" value=""
+                                        style="width: 40px;height: 35px;border-color:#a0a0a0;border-style: solid; border-width: 0.5;border-radius: 5%;margin-top: -5px;">
+                                    <input type="submit" value="Sim Th" class="btn btn-xs btn-primary btn-block"
+                                        style="font-size:x-small; margin-left: 5;margin-top: -3px;height:30px;">
+                                </form>
+                            </div>
 
-                                <div class="col-1" style="margin: -6 0 0 -35;">
-                                    <select onchange="changeNetworkVersion(value);" name="NetworkVersion"
-                                        id="select-network-version" style="width: 35px;">
-                                        <option value="V1">V1</option>
-                                        <option value="V2">V2</option>
-                                        <option value="V3" selected>V3</option>
-                                        <option value="V4">V4</option>
-                                        <option value="V5">V5</option>
-                                        <option value="V6">V6</option>
-                                    </select>
-                                </div>
-                                <div class="col-1" style="font-size:small; margin-left: -30px;">
-                                    <form onsubmit="getEdgeLabelSize()" style="display: flex;">
-                                        <input id="edge-label-size" placeholder="" value=""
-                                            style="width: 40px;height: 35px;border-color:#a0a0a0;border-style: solid; border-width: 0.5;border-radius: 5%;margin-top: -5px;">
-                                        <input type="submit" value="E Size" class="btn btn-xs btn-primary btn-block"
-                                            style="font-size:x-small; margin-left: 5;margin-top: -3px;height:30px;">
-                                    </form>
-                                </div>
-                                <div class="col-1" style="font-size:small; margin-left: 30px;">
-                                    <form onsubmit="getNewsSimThreshold()" style="display: flex;">
-                                        <input id="news-sim-threshold" placeholder="" value=""
-                                            style="width: 40px;height: 35px;border-color:#a0a0a0;border-style: solid; border-width: 0.5;border-radius: 5%;margin-top: -5px;">
-                                        <input type="submit" value="Sim Th" class="btn btn-xs btn-primary btn-block"
-                                            style="font-size:x-small; margin-left: 5;margin-top: -3px;height:30px;">
-                                    </form>
-                                </div>
+                            <div class="col-1" style="font-size:small; margin-left: 35px;">
+                                <form onsubmit="getEntitySimThreshold()" style="display: flex;">
+                                    <input id="entity-sim-threshold" placeholder="" value=""
+                                        style="width: 40px;height: 35px;border-color:#a0a0a0;border-style: solid; border-width: 0.5;border-radius: 5%;margin-top: -5px;">
+                                    <input type="submit" value="E Sim Th" class="btn btn-xs btn-primary btn-block"
+                                        style="font-size:x-small; margin-left: 5;margin-top: -3px;height:30px;">
+                                </form>
                             </div>
                         </div>
 
                     </div>
                 </div>
-                <div class="col-1" style="font-size:small; margin-left: -30px;">
-                    <form onsubmit="getEntitySimThreshold()" style="display: flex;">
-                        <input id="entity-sim-threshold" placeholder="" value=""
-                            style="width: 40px;height: 35px;border-color:#a0a0a0;border-style: solid; border-width: 0.5;border-radius: 5%;margin-top: -5px;">
-                        <input type="submit" value="E Sim Th" class="btn btn-xs btn-primary btn-block"
-                            style="font-size:x-small; margin-left: 5;margin-top: -3px;height:30px;">
-                    </form>
-                </div>
-                <div class="col-2 pb-2" style="margin: -5 0 0 0;">
+
+                <div class="col-3 pb-2" style="margin: -5 0 0 0;">
                     <select aria-label="Default select example" onchange="selectNode([value]);" id="select-node"
                         placeholder="Select node...">
                         <!-- <option selected>Select a Node by ID</option> -->
@@ -349,16 +341,6 @@
 
     <div class="card-body">
         <div id="mynetwork"></div>
-        <div id="highlight-attr">
-            <span id="highlight-text-title"></span>
-            <div id="highlight-text"></div>
-
-            <span id="highlight-ner-title"></span>
-            <div id="highlight-ner">
-                <div id="highlight-name"></div>
-                <div id="highlight-tag"></div>
-            </div>
-        </div>
         <div id="config"></div>
     </div>
 
@@ -646,15 +628,9 @@
         const toggleButton2 = document.getElementById('toggleButton2');
         const config = document.getElementById('config');
         const mynetwork = document.getElementById('mynetwork');
-        const highlightAttr = document.getElementById('highlight-attr');
-        const highlightText = document.getElementById('highlight-text');
-        const highlightTextTitle = document.getElementById('highlight-text-title');
-        const highlightNer = document.getElementById('highlight-ner');
-        const highlightNerTitle = document.getElementById('highlight-ner-title');
-        const highlightName = document.getElementById('highlight-name');
-        const highlightTag = document.getElementById('highlight-tag');
-        const edgeHiddenProp = ['to', 'from', 'arrows', 'color', 'hiddenLabel']
-        const nodeHiddenProp = ['hidden', 'savedLabel', 'hiddenLabel', 'size', 'color', 'shape', 'value']
+
+        const edgeHiddenProp = ['to', 'from', 'arrows', 'color', 'hidden', 'hiddenLabel', 'sim', 'label_ori', 'label', 'dashes']
+        const nodeHiddenProp = ['hidden', 'savedLabel', 'hiddenLabel', 'size', 'color', 'shape', 'value', 'image', 'summary', 'title']
         let isPhysicsExpanded = false;
         var isAttrExpanded = false;
 
@@ -665,18 +641,6 @@
                 config.style.width = '500px';
             }
             isPhysicsExpanded = !isPhysicsExpanded;
-        });
-
-        const toggleButton3 = document.getElementById('toggleButton3');
-        toggleButton3.addEventListener('click', function () {
-            if (isAttrExpanded) {
-                mynetwork.style.width = '99%';
-                highlightAttr.style.width = '0';
-            } else {
-                mynetwork.style.width = '80%';
-                highlightAttr.style.width = '20%';
-            }
-            isAttrExpanded = !isAttrExpanded;
         });
 
         const toggleButton4 = document.getElementById('toggleButton4');
@@ -1068,8 +1032,6 @@
             network = new vis.Network(container, data, options);
             allNodes = nodes.get({ returnType: "Object" });
             allEdges = edges.get({ returnType: "Object" });
-
-            var toggleSwitch = document.querySelector('#auto-toggle-switch');
 
             network.on('click', function (params) {
                 if (params.nodes.length === 0 && params.edges.length === 0 && params.items.length === 0) {
