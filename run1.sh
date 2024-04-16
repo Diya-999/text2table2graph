@@ -18,8 +18,11 @@ python gen_node_edge.py --input_path ./staging/tmp_t1/entity2entity.pkl --output
 
 ### add_nodes_attrs
 python add_nodes_attrs.py --input_path ./staging/tmp_t1/entity_v1.pkl --add_attr_maps '[{"attr_name":"shape","attr_val":"circularImage"},{"attr_name":"image","attr_val":"entity.png"}]' --output_path ./staging/tmp_t1/entity_v2.pkl
+
+python add_nodes_attrs.py --input_path ./staging/tmp_t1/entity_v2.pkl --input_attr_path ./staging/tmp_t1/node_attr_news_ner.pkl --input_attr_map '{"node":"source","name":"node","tag":"entity_tag"}' --merge_on node --add_mode one-to-many --integrate_approach set --add_cols entity_tag --output_path ./staging/tmp_t1/entity_v3.pkl
+
 ### add_edges_attrs
 python add_edges_attrs.py --input_path ./staging/tmp_t1/entity2entity_v1.pkl --input_attr_path ./staging/tmp_t1/entity2entity_v1.pkl --add_cols relation --output_path ./staging/tmp_t1/entity2entity_v2.pkl
 
 ### gen json dataset
-python df2json.py --input_edge_path ./staging/tmp_t1/entity2entity_v2.pkl --input_node_path ./staging/tmp_t1/entity_v2.pkl --output_folder ./json1 --whether_use_node_id 0
+python df2json.py --input_edge_path ./staging/tmp_t1/entity2entity_v2.pkl --input_node_path ./staging/tmp_t1/entity_v3.pkl --output_folder ./json1 --whether_use_node_id 0

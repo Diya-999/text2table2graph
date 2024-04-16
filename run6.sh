@@ -41,9 +41,11 @@ python gen_node_edge.py --input_path ./staging/tmp_t5/entity2entity_sim.pkl --ou
 ### add_nodes_attrs
 python add_nodes_attrs.py --input_path ./staging/tmp_t5/news_v1.pkl --add_attr_maps '[{"attr_name":"shape","attr_val":"image"},{"attr_name":"image","attr_val":"news.png"},{"attr_name":"color","attr_val":"#e8792e"}]' --input_attr_path ./staging/tmp_t5/node_attr_summary.pkl --add_cols summary --output_path ./staging/tmp_t5/news_v2.pkl
 
-python add_nodes_attrs.py --input_path ./staging/tmp_t5/news_v2.pkl --input_attr_path ./staging/tmp_t5/node_attr_news_ner.pkl --add_cols name tag --output_path ./staging/tmp_t5/news_v2.pkl --add_mode one-to-many --unique_attr_df 1
+python add_nodes_attrs.py --input_path ./staging/tmp_t5/news_v2.pkl --input_attr_path ./staging/tmp_t5/node_attr_news_ner.pkl --add_cols name tag --output_path ./staging/tmp_t5/news_v2.pkl --add_mode one-to-many --integrate_approach list --unique_attr_df 1
 
 python add_nodes_attrs.py --input_path ./staging/tmp_t5/entity_v1.pkl --add_attr_maps '[{"attr_name":"shape","attr_val":"circularImage"},{"attr_name":"image","attr_val":"entity.png"}]' --output_path ./staging/tmp_t5/entity_v2.pkl
+
+python add_nodes_attrs.py --input_path ./staging/tmp_t5/entity_v2.pkl --input_attr_path ./staging/tmp_t5/node_attr_news_ner.pkl --input_attr_map '{"node":"source","name":"node","tag":"entity_tag"}' --merge_on node source --add_cols entity_tag --output_path ./staging/tmp_t5/entity_v3.pkl
 
 ### add_edges_attrs
 python add_edges_attrs.py --input_path ./staging/tmp_t5/entity2entity_v1_with_id.pkl --input_attr_path ./staging/tmp_t5/entity2entity_v1_with_id.pkl --add_cols relation --output_path ./staging/tmp_t5/entity2entity_v2.pkl
@@ -53,4 +55,4 @@ python add_edges_attrs.py --input_path ./staging/tmp_t5/news2entity_v1_with_id.p
 python add_edges_attrs.py --input_path ./staging/tmp_t5/entity2entity_sim_v1.pkl --input_attr_path ./staging/tmp_t5/entity2entity_sim_v1.pkl  --add_attr_maps '[{"attr_name":"color","attr_val":"#49bf6c"},{"attr_name":"dashes","attr_val":"True"}]' --add_cols sim --output_path ./staging/tmp_t5/entity2entity_sim_v2.pkl
 
 ### gen json dataset
-python df2json.py --input_edge_path ./staging/tmp_t5/entity2entity_v2.pkl ./staging/tmp_t5/news2entity_v2.pkl ./staging/tmp_t5/entity2entity_sim_v2.pkl --input_node_path ./staging/tmp_t5/news_v2.pkl ./staging/tmp_t5/entity_v2.pkl --output_folder ./json6 --whether_use_node_id 1
+python df2json.py --input_edge_path ./staging/tmp_t5/entity2entity_v2.pkl ./staging/tmp_t5/news2entity_v2.pkl ./staging/tmp_t5/entity2entity_sim_v2.pkl --input_node_path ./staging/tmp_t5/news_v2.pkl ./staging/tmp_t5/entity_v3.pkl --output_folder ./json6 --whether_use_node_id 1
