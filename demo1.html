@@ -526,7 +526,10 @@
             allNodes = nodes.get({ returnType: "Object" });
             for (nodeId in allNodes) {
                 if (allNodes[nodeId].hasOwnProperty('node_type') && allNodes[nodeId].node_type === "news") {
-                    allNodes[nodeId].color = '#e8792e'
+                    allNodes[nodeId].color = '#8B7688'
+                }else if (allNodes[nodeId].hasOwnProperty('node_type') && allNodes[nodeId].node_type === "entity")
+                {
+                    allNodes[nodeId].color = '#0D6EFD'
                 }
                 nodeColors[nodeId] = allNodes[nodeId].color;
             }
@@ -632,8 +635,8 @@
         const config = document.getElementById('config');
         const mynetwork = document.getElementById('mynetwork');
 
-        const edgeHiddenProp = ['to', 'from', 'arrows', 'color', 'hidden', 'hiddenLabel', 'sim', 'label_ori', 'label', 'dashes']
-        const nodeHiddenProp = ['hidden', 'savedLabel', 'hiddenLabel', 'size', 'color', 'shape', 'value', 'image', 'summary', 'title']
+        const edgeHiddenProp = ['id','to', 'from', 'arrows', 'color', 'hidden', 'hiddenLabel', 'label_ori', 'label', 'dashes']
+        const nodeHiddenProp = ['id','hidden', 'savedLabel', 'hiddenLabel', 'size', 'color', 'shape', 'value', 'image', 'summary', 'title']
         let isPhysicsExpanded = false;
         var isAttrExpanded = false;
 
