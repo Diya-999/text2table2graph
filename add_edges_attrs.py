@@ -40,13 +40,14 @@ if __name__ == '__main__':
             df.drop(columns=repeat_col, inplace=True)
         if args.add_cols != []:
             add_cols = args.add_cols
-            df_attr = df_attr[args.add_cols+['node1','node2']]
+            df_attr = df_attr[args.add_cols+args.merge_cols]
         else:
-            add_cols = list(df_attr.columns) - ['node1','node2']
+            add_cols = list(df_attr.columns) - args.merge_cols
 
-        merge_df = df.merge(df_attr, on=args.merge_cols, how='left')
-        
-        df['attr'] = merge_df.apply(add_attr, args=(add_cols,), axis=1)
+        df = df.merge(df_attr, on=args.merge_cols, how='left')
+
+        df['attr'] = df.apply(add_attr, args=(add_cols,), axis=1)
+        df.drop(columns=add_cols,inplace=True)
 
     if args.add_attr_maps or args.input_attr_path:
         df.to_pickle(args.output_path)
