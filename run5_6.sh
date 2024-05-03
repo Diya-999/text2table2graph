@@ -12,14 +12,13 @@ python pkl2df.py --input_folder ./staging/stg_e/dj_news/rel_on_ner/ --output_pat
 
 python pkl2df.py --input_folder ./staging/stg_e/dj_news/rel_on_ner/ --output_path ./staging/tmp_t5/news2entity_2.pkl --extract_column_list "entity 2" source --map_cols '{"entity 2":"node1", "source":"node2"}'
 
-python pkl2df.py --input_folder ./staging/stg_e/dj_news/news_sum_sim/ --output_path ./staging/tmp_t5/news2news.pkl --extract_column_list node1 node2 sim --is_value_str 0 #--query_str 'sim > 0.75'
+##sim_edge
+python gen_sim.py --input_path ./staging/stg_e/dj_news/ner2ner_sim/news2news_en2en_sim2.pkl --entity2entity_output_path ./staging/tmp_t5/entity2entity_sim.pkl --news2news_output_path ./staging/tmp_t5/news2news_sim.pkl 
 
 ### get sum
 python pkl2df.py --input_folder ./staging/stg_e/dj_news/sum/ --output_path ./staging/tmp_t5/node_attr_summary.pkl  --extract_column_list text source --map_cols '{"text": "summary", "source":"node"}'
 ### get ner
 python pkl2df.py --input_folder ./staging/stg_e/dj_news/ner/ --output_path ./staging/tmp_t5/node_attr_news_ner.pkl  --extract_column_list name tag source --map_cols '{"source":"node"}'
-##### get sim
-python pkl2df.py --input_folder ./staging/stg_e/dj_news/news_sum_sim/ --output_path ./staging/tmp_t5/edge_attr_news_sim.pkl  --extract_column_list node1 node2 sim
 
 ### gen_node_edge.py
 ### gen node
@@ -32,11 +31,9 @@ python gen_node_edge.py --input_path ./staging/tmp_t5/news2entity_1.pkl ./stagin
 
 python gen_node_edge.py --input_path ./staging/tmp_t5/entity2entity.pkl --output_path ./staging/tmp_t5/entity2entity_v1_with_id.pkl --type edge  --unique_cols node1_id node2_id --input_node1_path ./staging/tmp_t5/entity_v1.pkl --input_node1_merge_cols node source --input_df_node1_merge_cols node1 source --input_node2_path ./staging/tmp_t5/entity_v1.pkl  --input_node2_merge_cols node source  --input_df_node2_merge_cols node2 source
 
-python gen_node_edge.py --input_path ./staging/tmp_t5/news2news.pkl --output_path ./staging/tmp_t5/news2news_v1_with_id.pkl --type edge --input_node1_path ./staging/tmp_t5/news_v1.pkl --input_node1_merge_cols node --input_df_node1_merge_cols node1 --input_node2_path ./staging/tmp_t5/news_v1.pkl  --input_node2_merge_cols node --input_df_node2_merge_cols node2
+python gen_node_edge.py --input_path ./staging/tmp_t5/news2news_sim.pkl --output_path ./staging/tmp_t5/news2news_v1_with_id.pkl --type edge --input_node1_path ./staging/tmp_t5/news_v1.pkl --input_node1_merge_cols node --input_df_node1_merge_cols node1 --input_node2_path ./staging/tmp_t5/news_v1.pkl  --input_node2_merge_cols node --input_df_node2_merge_cols node2
 
-python gen_entity2entity_sim.py --news2entity_path ./staging/tmp_t5/news2entity_v1_with_id.pkl --news2news_path ./staging/tmp_t5/news2news_v1_with_id.pkl --output_path ./staging/tmp_t5/entity2entity_sim.pkl
-
-python gen_node_edge.py --input_path ./staging/tmp_t5/entity2entity_sim.pkl --output_path ./staging/tmp_t5/entity2entity_sim_v1.pkl --type edge --edge_extract_cols node1 node2 sim edge_type node1_id node2_id --input_node1_path ./staging/tmp_t5/entity_v1.pkl --input_node1_merge_cols node source --input_df_node1_merge_cols node1 node1_source --input_node2_path ./staging/tmp_t5/entity_v1.pkl  --input_node2_merge_cols node source  --input_df_node2_merge_cols node2 node2_source
+python gen_node_edge.py --input_path ./staging/tmp_t5/entity2entity_sim.pkl --output_path ./staging/tmp_t5/entity2entity_sim_v1.pkl --type edge --edge_extract_cols node1 node2 sim news2news_sim edge_type node1_id node2_id --input_node1_path ./staging/tmp_t5/entity_v1.pkl --input_node1_merge_cols node source --input_df_node1_merge_cols node1 node1_source --input_node2_path ./staging/tmp_t5/entity_v1.pkl  --input_node2_merge_cols node source  --input_df_node2_merge_cols node2 node2_source
 
 ### add_nodes_attrs
 python add_nodes_attrs.py --input_path ./staging/tmp_t5/news_v1.pkl --add_attr_maps '[{"attr_name":"shape","attr_val":"image"},{"attr_name":"image","attr_val":"news.png"},{"attr_name":"color","attr_val":"#e8792e"}]' --input_attr_path ./staging/tmp_t5/node_attr_summary.pkl --add_cols summary --output_path ./staging/tmp_t5/news_v2.pkl
@@ -52,7 +49,12 @@ python add_edges_attrs.py --input_path ./staging/tmp_t5/entity2entity_v1_with_id
 
 python add_edges_attrs.py --input_path ./staging/tmp_t5/news2entity_v1_with_id.pkl --add_attr_maps '[{"attr_name":"relation","attr_val":"has"}]' --output_path ./staging/tmp_t5/news2entity_v2.pkl
 
-python add_edges_attrs.py --input_path ./staging/tmp_t5/entity2entity_sim_v1.pkl --input_attr_path ./staging/tmp_t5/entity2entity_sim_v1.pkl  --add_attr_maps '[{"attr_name":"color","attr_val":"#49bf6c"},{"attr_name":"dashes","attr_val":"True"}]' --add_cols sim --output_path ./staging/tmp_t5/entity2entity_sim_v2.pkl
+python add_edges_attrs.py --input_path ./staging/tmp_t5/news2news_v1_with_id.pkl --add_attr_maps '[{"attr_name":"dashes","attr_val":"True"}]' --input_attr_path ./staging/tmp_t5/news2news_sim.pkl --add_cols sim --output_path ./staging/tmp_t5/news2news_v2.pkl
 
-### gen json dataset
+python add_edges_attrs.py --input_path ./staging/tmp_t5/entity2entity_sim_v1.pkl --input_attr_path ./staging/tmp_t5/entity2entity_sim_v1.pkl  --merge_cols node1 node2 node1_id node2_id --add_attr_maps '[{"attr_name":"color","attr_val":"#49bf6c"},{"attr_name":"dashes","attr_val":"True"}]' --add_cols sim news2news_sim --output_path ./staging/tmp_t5/entity2entity_sim_v2.pkl
+
+### gen json5 dataset
+python df2json.py --input_edge_path ./staging/tmp_t5/entity2entity_v2.pkl ./staging/tmp_t5/news2entity_v2.pkl ./staging/tmp_t5/news2news_v2.pkl ./staging/tmp_t5/entity2entity_sim_v2.pkl --input_node_path ./staging/tmp_t5/news_v2.pkl ./staging/tmp_t5/entity_v3.pkl --output_folder ./json5 --whether_use_node_id 1
+
+### gen json6 dataset
 python df2json.py --input_edge_path ./staging/tmp_t5/entity2entity_v2.pkl ./staging/tmp_t5/news2entity_v2.pkl ./staging/tmp_t5/entity2entity_sim_v2.pkl --input_node_path ./staging/tmp_t5/news_v2.pkl ./staging/tmp_t5/entity_v3.pkl --output_folder ./json6 --whether_use_node_id 1
